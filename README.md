@@ -53,16 +53,16 @@ Imports WebPages.Controls
 Public Class IndexPage
     Inherits Page
 
-    Private WithEvents txt1 As New TextBox(Me, "formTxt1")
+    Private WithEvents formTxt1 As New TextBox(Me, nameOf(formTxt1))
 
     Private Sub IndexPage_Load(FirstRun As Boolean) Handles Me.Load
         If FirstRun Then
-            txt1.CSS = "form-control"
-            txt1.Text = "Ваш текст здесь ..."
+            formTxt1.CSS = "form-control"
+            formTxt1.Text = "Ваш текст здесь ..."
         End If
     End Sub
 
-    Private Sub txt1_TextChanged(arg1 As TextBox, arg2 As String) Handles txt1.TextChanged
+    Private Sub formTxt1_TextChanged(arg1 As TextBox, arg2 As String) Handles formTxt1.TextChanged
         ViewData("H1") = txt1.Text & " " & Now.Date().ToString()
     End Sub
 
