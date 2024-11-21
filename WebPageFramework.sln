@@ -5,7 +5,7 @@ VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "WebPageFramework", "WebPageFramework\WebPageFramework.vbproj", "{408625CD-068C-4A70-BD0C-88DED39E97C6}"
 EndProject
-Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "WebPageTest", "WebPageTest\WebPageTest.vbproj", "{2C54072A-E1EB-4A1F-B415-A0A73EC01086}"
+Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "WebPageTest", "WebPageTest\WebPageTest.vbproj", "{2C54072A-E1EB-4A1F-B415-A0A73EC01086}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
