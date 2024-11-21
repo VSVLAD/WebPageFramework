@@ -1,0 +1,42 @@
+﻿<!DOCTYPE html>
+<html lang="ru-RU">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <link type="text/css" rel="stylesheet" href="/lib/bootstrap/bootstrap.css" />
+    <link type="text/css" rel="stylesheet" href="/css/site.css" />
+    <script type="text/javascript" src="/lib/bootstrap/bootstrap.js"></script>
+    <title>{{ Title }}</title>
+</head>
+<body>
+    {{ formBegin }}
+    {{ formViewState }}
+    <section class="container">
+        <div class="row">
+            <div class="col-12 bg-dark text-white">
+                <h1 class="h4 py-3 px-5">{{ H1 }}</h1>
+            </div>
+        </div>
+    </section>
+    <section class="container">
+        <div class="row mt-3">
+            <div class="col-md-6">
+                {{ formTxt1 }}
+                {{ formBtn1 }}
+            </div>
+            <div class="col-md-6">
+                {{ formBtn2 }}
+            </div>
+            <div class="col-md-4 mt-4">
+                {{ formCmb1 }}
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-12">
+                {{ fragmentAlert }}
+            </div>
+        </div>
+    </section>
+    {{ formEnd }}
+</body>
+</html>
