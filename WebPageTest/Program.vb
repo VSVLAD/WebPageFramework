@@ -14,6 +14,7 @@ Public Module Program
         builder.Services.AddResponseCompression(Sub(comperessOptions)
                                                     comperessOptions.EnableForHttps = True
                                                 End Sub)
+
         Dim app = builder.Build()
         app.UseSession()
         app.UseResponseCompression()

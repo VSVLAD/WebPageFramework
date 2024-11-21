@@ -87,7 +87,7 @@ Public Class WebPagesHelper
         Page.ViewData("formEnd") = "</form>"
     End Sub
 
-    ' Создаёт заменитель для объекта состояния
+    ' Создаёт заполнитель для объекта состояния
     Public Shared Sub GenerateStateViewForm(Page As IPage, PackedState As String)
         Page.ViewData("formViewState") = $"<input type=""hidden"" name=""viewState"" value=""{PackedState}"" />"
     End Sub

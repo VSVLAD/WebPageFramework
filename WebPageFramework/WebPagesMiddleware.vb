@@ -9,25 +9,20 @@ Public Class WebPagesMiddleware
     Private ReadOnly env As IWebHostEnvironment
     Private ReadOnly options As WebPagesOptions
 
-    Public Sub New(nextDelegate As RequestDelegate, env As IWebHostEnvironment)
-        Me.New(nextDelegate, env, Nothing)
-    End Sub
-
     Public Sub New(nextDelegate As RequestDelegate, env As IWebHostEnvironment, options As WebPagesOptions)
         Me.nextDelegate = nextDelegate
         Me.env = env
-        Me.options = If(options, New WebPagesOptions() With {
-                                        .StateProvider = New DefaultStateProvider("Default", "Default"),
-                                        .TemplateProvider = New DefaultTemplateProvider(env.WebRootPath)
-                                    })
+        Me.options = If(options, New WebPagesOptions())
+        Me.options.StateProvider = If(Me.options.StateProvider, New DefaultStateProvider("Default", "Default"))
+        Me.options.TemplateProvider = If(Me.options.TemplateProvider, New DefaultTemplateProvider(env.WebRootPath))
+        Me.options.MappedPages = If(Me.options.MappedPages, New Dictionary(Of String, Type))
     End Sub
 
     Public Async Function InvokeAsync(context As HttpContext) As Task
-
-        ' Выполняется работа с формой, если в роутинге адрес помечен для работы как с веб-формой
         Dim pageType As Type = Nothing
 
-        If context.Items.TryGetValue("WebPageType", pageType) Then
+        ' Выполняется запрашиваемый адрес ассоциирован с формой, то выполняем обработку
+        If options.MappedPages.TryGetValue(context.Request.Path, pageType) Then
 
             ' Создаем экземпляр формы
             Dim pageInstance = WebPageFactory.Create(pageType, context, env, options)

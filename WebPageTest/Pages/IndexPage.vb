@@ -6,27 +6,27 @@ Public Class IndexPage
     Inherits Page
 
     ' Создаём контролы
-    Private WithEvents btn1 As New Button(Me, "formBtn1")
-    Private WithEvents btn2 As New Button(Me, "formBtn2")
-    Private WithEvents txt1 As New TextBox(Me, "formTxt1")
-    Private WithEvents cmb1 As New ComboBox(Me, "formCmb1")
-    Private WithEvents fragmentAlert As New AlertFragment(Me, "fragmentAlert")
+    Private WithEvents formBtn1 As New Button(Me, NameOf(formBtn1))
+    Private WithEvents formBtn2 As New Button(Me, NameOf(formBtn2))
+    Private WithEvents formTxt1 As New TextBox(Me, NameOf(formTxt1))
+    Private WithEvents formCmb1 As New ComboBox(Me, NameOf(formCmb1))
+    Private WithEvents fragmentAlert As New AlertFragment(Me, NameOf(fragmentAlert))
 
 
-    Private Sub IndexPage_Load(First As Boolean) Handles Me.Load
-        If First Then
-            btn1.CSS = "btn btn-danger"
-            btn1.Text = "Нажми меня!"
+    Private Sub IndexPage_Load(FirstRun As Boolean) Handles Me.Load
+        If FirstRun Then
+            formBtn1.CSS = "btn btn-danger"
+            formBtn1.Text = "Нажми меня!"
 
-            btn2.CSS = "btn btn-success"
-            btn2.Text = "Счётчик"
-            txt1.CSS = "form-control"
+            formBtn2.CSS = "btn btn-success"
+            formBtn2.Text = "Счётчик"
+            formTxt1.CSS = "form-control"
 
-            cmb1.CSS = "form-select"
-            cmb1.Items.Clear()
+            formCmb1.CSS = "form-select"
+            formCmb1.Items.Clear()
 
             For Each y In Enumerable.Range(2000, 50)
-                cmb1.Items.Add(New ComboBoxItem($"Год {y}", y))
+                formCmb1.Items.Add(New ComboBoxItem($"Год {y}", y))
             Next
 
             Context.Session.SetInt32("counter", 0)
@@ -37,26 +37,26 @@ Public Class IndexPage
     End Sub
 
 
-    Private Sub btn1_Click(arg1 As Button, arg2 As String) Handles btn1.Click
-        txt1.Text = "Привет мир! " & Now.Ticks()
-        txt1.CSS = "form-control bg-danger text-white"
+    Private Sub btn1_Click(arg1 As Button, arg2 As String) Handles formBtn1.Click
+        formTxt1.Text = "Привет мир! " & Now.Ticks()
+        formTxt1.CSS = "form-control bg-danger text-white"
 
-        btn1.Text = "Меня уже нажимали =)"
+        formBtn1.Text = "Меня уже нажимали =)"
     End Sub
 
-    Private Sub btn2_Click(arg1 As Button, arg2 As String) Handles btn2.Click
-        txt1.CSS = "form-control bg-success text-black"
+    Private Sub btn2_Click(arg1 As Button, arg2 As String) Handles formBtn2.Click
+        formTxt1.CSS = "form-control bg-success text-black"
 
         Dim counter = Context.Session.GetInt32("counter")
         If Not counter.HasValue Then counter = 0
 
         counter += 1
-        btn2.Text = $"Проверка: {counter}"
+        formBtn2.Text = $"Проверка: {counter}"
 
         Context.Session.SetInt32("counter", counter)
     End Sub
 
-    Private Sub txt1_TextChanged(arg1 As TextBox, arg2 As String) Handles txt1.TextChanged
+    Private Sub txt1_TextChanged(arg1 As TextBox, arg2 As String) Handles formTxt1.TextChanged
         ViewData("Title") = arg1.Text
     End Sub
 

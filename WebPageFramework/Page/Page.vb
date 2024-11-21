@@ -88,7 +88,7 @@ Public MustInherit Class Page
         ' Генерируем заменители для формы
         WebPagesHelper.GenerateBeginEndViewForm(Me)
 
-        ' Генерируем заменитель для состояния
+        ' Генерируем заполнитель для состояния
         WebPagesHelper.GenerateStateViewForm(Me, WebPagesHelper.GenerateState(Me, Options.StateProvider))
 
         ' Подсказываем, что начинаем генерировать контент

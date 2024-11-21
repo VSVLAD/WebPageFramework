@@ -1,7 +1,7 @@
 ﻿Public Interface IViewData
 
     ''' <summary>
-    ''' Список заменителей для отрисовки элемента управления
+    ''' Словарь содержит заполнители используемые в страницах или фрагментах, а также сами данные для замены
     ''' </summary>
     Property ViewData As Dictionary(Of String, Object)
 

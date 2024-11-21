@@ -3,31 +3,25 @@ Imports Microsoft.AspNetCore.Builder
 
 Public Module WebPagesMiddlewareExtensions
 
-    <Extension>
-    Public Function UseWebPages(app As IApplicationBuilder) As IApplicationBuilder
-        Return app.UseMiddleware(Of WebPagesMiddleware)()
-    End Function
+    ' Список смапленных адресов на страницы
+    Private ReadOnly mappedPages As New Dictionary(Of String, Type)
 
     <Extension>
-    Public Function UseWebPages(app As IApplicationBuilder, options As WebPagesOptions) As IApplicationBuilder
+    Public Function UseWebPages(app As IApplicationBuilder) As IApplicationBuilder
+        Dim options As New WebPagesOptions() With {.MappedPages = New Dictionary(Of String, Type)(mappedPages)}
         Return app.UseMiddleware(Of WebPagesMiddleware)(options)
     End Function
 
     <Extension>
-    Public Sub MapWebPage(Of TPage As IPage)(app As IApplicationBuilder, Url As String)
-        app.Use(Function(context, nextMiddleware)
+    Public Function UseWebPages(app As IApplicationBuilder, options As WebPagesOptions) As IApplicationBuilder
+        options.MappedPages = If(options.MappedPages, mappedPages)
+        Return app.UseMiddleware(Of WebPagesMiddleware)(options)
+    End Function
 
-                    ' Проверяем, что маршрут ещё не был обработан
-                    If Not context.Items.ContainsKey("WebPageMatched") AndAlso context.Request.Path.Equals(Url, StringComparison.OrdinalIgnoreCase) Then
-
-                        ' Устанавливаем имя страницы и флаг, что маршрут проверен и идём дальше, пока не достигнем WebPagesMiddleware
-                        context.Items("WebPageType") = GetType(TPage)
-                        context.Items("WebPageMatched") = True
-                        Return nextMiddleware()
-                    End If
-
-                    Return nextMiddleware()
-                End Function)
-    End Sub
+    <Extension>
+    Public Function MapWebPage(Of TPage As IPage)(app As IApplicationBuilder, Url As String) As IApplicationBuilder
+        mappedPages(Url) = GetType(TPage)
+        Return app
+    End Function
 
 End Module
