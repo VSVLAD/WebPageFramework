@@ -10,13 +10,16 @@ Public Class WebPageFactory
         Dim pageType = Assembly.GetEntryAssembly().GetType(Id)
 
         If pageType Is Nothing Then
-            Throw New WebPageNotFoundException($"Не найден класс веб-формы ""{Id}""")
+            Throw New WebPageNotFoundException($"Не найден класс формы ""{Id}""")
         End If
 
         Return Create(pageType, Context, Environment, Options)
     End Function
 
     Public Shared Function Create(PageType As Type, Context As HttpContext, Environment As IWebHostEnvironment, Options As WebPagesOptions) As IPage
+        If Not GetType(IPage).IsAssignableFrom(PageType) Then
+            Throw New ArgumentException($"Класс формы ""{PageType.Name}"" должен реализовывать интерфейс IPage")
+        End If
 
         ' Создаем экземпляр класса для Code-Behind
         Dim pageInstance = CType(Activator.CreateInstance(PageType), IPage)

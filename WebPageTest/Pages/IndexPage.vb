@@ -12,7 +12,6 @@ Public Class IndexPage
     Private WithEvents formCmb1 As New ComboBox(Me, NameOf(formCmb1))
     Private WithEvents fragmentAlert As New AlertFragment(Me, NameOf(fragmentAlert))
 
-
     Private Sub IndexPage_Load(FirstRun As Boolean) Handles Me.Load
         If FirstRun Then
             formBtn1.CSS = "btn btn-danger"

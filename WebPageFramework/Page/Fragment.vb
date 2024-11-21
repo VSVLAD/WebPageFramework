@@ -20,7 +20,7 @@ Public MustInherit Class Fragment
 
     Public ReadOnly Property Page As IPage
 
-    Public Sub New(Parent As IContainer, Id As String)
+    Protected Sub New(Parent As IContainer, Id As String)
         If Parent Is Nothing Then Throw New ArgumentNullException(NameOf(Parent))
         If Id Is Nothing Then Throw New ArgumentNullException(NameOf(Id))
 

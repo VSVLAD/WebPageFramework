@@ -17,10 +17,7 @@ Public MustInherit Class Page
     Public Property ViewData As Dictionary(Of String, Object) Implements IViewData.ViewData
     Public Property EnableState As Boolean Implements IState.EnableState
 
-
-    ' Создавать экземпляр сможет только фабрика форм
     Protected Friend Sub New()
-
         ' Свойства по-умолчанию
         Me.Controls = New Dictionary(Of String, IHtmlControl)
         Me.ViewData = New Dictionary(Of String, Object)

@@ -3,7 +3,7 @@ Imports Microsoft.AspNetCore.Builder
 
 Public Module WebPagesMiddlewareExtensions
 
-    ' Список смапленных адресов на страницы
+    ' Список смапленных адресов на страницы 
     Private ReadOnly mappedPages As New Dictionary(Of String, Type)
 
     <Extension>
