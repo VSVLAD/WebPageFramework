@@ -1,0 +1,59 @@
+﻿Namespace Controls
+
+    Public Interface IHtmlControl
+        Inherits IControl, IState
+
+        ''' <summary>
+        ''' Класс CSS
+        ''' </summary>
+        Property CSS As String
+
+        ''' <summary>
+        ''' Можно ли использовать элемент управления
+        ''' </summary>
+        Property Enabled As Boolean
+
+        ''' <summary>
+        ''' Видимый ли элемент управления
+        ''' </summary>
+        Property Visible As Boolean
+
+        ''' <summary>
+        ''' Дополнительные атрибуты для элемента управления
+        ''' </summary>
+        Property Attributes As Dictionary(Of String, String)
+
+        ''' <summary>
+        ''' Включена ли генерация событий
+        ''' </summary>
+        Property EnableEvents As Boolean
+
+        ''' <summary>
+        ''' Ссылка на страницу где размещается элемент управления
+        ''' </summary>
+        Property Parent As IContainer
+
+        ''' <summary>
+        ''' Метод должен возвращать тело элемента управления
+        ''' </summary>
+        Function RenderHtml() As String
+
+        ''' <summary>
+        ''' Метод может возвращать дополнительный скрипт для инициализации контрола или обработки элемента управления
+        ''' </summary>
+        Function RenderScript() As String
+
+        ''' <summary>
+        ''' Метод вызывается фреймворком и передаёт имя события и опциональное значение события
+        ''' Элемент управления должен проверить и создать пользовательское событие
+        ''' </summary>
+        Sub ProcessEvent(EventName As String, EventArgument As String)
+
+        ''' <summary>
+        ''' Метод вызывается фреймворком и передаётся значение формы, чтобы элемент управления мог себя инициализировать этим значением
+        ''' </summary>
+        Sub ProcessFormData(Value As String)
+
+    End Interface
+
+End Namespace

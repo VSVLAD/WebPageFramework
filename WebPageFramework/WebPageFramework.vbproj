@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <RootNamespace>WebPages</RootNamespace>
+    <TargetFramework>net8.0</TargetFramework>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="WebPagesMiddlewareExtensions.vb" />
+    <Content Include="WebPagesMiddleware.vb" />
+  </ItemGroup>
+
+</Project>
