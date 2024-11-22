@@ -71,7 +71,7 @@ Namespace Controls
             End If
         End Sub
 
-        Public Overrides Sub FromState(State As Dictionary(Of String, Object))
+        Public Overrides Sub FromState(State As StateObject)
             MyBase.FromState(State)
 
             If EnableState Then
@@ -80,7 +80,7 @@ Namespace Controls
             End If
         End Sub
 
-        Public Overrides Function ToState() As Dictionary(Of String, Object)
+        Public Overrides Function ToState() As StateObject
             Dim state = MyBase.ToState()
 
             If EnableState Then

@@ -1,7 +1,7 @@
 ﻿Public Interface IStateProvider
 
-    Sub FromStorage(Page As IPage, StateSerializer As IStateSerializer)
+    Function LoadState(State As String) As StateObject
 
-    Sub ToStorage(Page As IPage, StateSerializer As IStateSerializer)
+    Function SaveState(State As StateObject) As String
 
 End Interface

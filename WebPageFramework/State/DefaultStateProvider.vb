@@ -4,7 +4,7 @@ Imports System.Security.Cryptography
 Imports System.Text
 
 Public Class DefaultStateProvider
-    Implements IStateSerializer
+    Implements IStateProvider
 
     Private secretPassword As String
     Private secretSalt As String
@@ -29,7 +29,7 @@ Public Class DefaultStateProvider
     ''' <summary>
     ''' Сохранить состояние в сериализованное представление
     ''' </summary>
-    Public Function SaveState(State As Dictionary(Of String, Object)) As String Implements IStateSerializer.SaveState
+    Public Function SaveState(State As StateObject) As String Implements IStateProvider.SaveState
         Try
             ' Сериализуем
             Dim bytesState() As Byte = Encoding.UTF8.GetBytes(State.SerializeWithTypeInfo())
@@ -54,7 +54,7 @@ Public Class DefaultStateProvider
     End Function
 
     ''' Восстановить состояние из сериализованного представления
-    Public Function LoadState(PackedState As String) As Dictionary(Of String, Object) Implements IStateSerializer.LoadState
+    Public Function LoadState(PackedState As String) As StateObject Implements IStateProvider.LoadState
         Try
             ' Распаковываем
             Dim bytesState() As Byte = Convert.FromBase64String(PackedState)

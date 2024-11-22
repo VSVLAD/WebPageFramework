@@ -1,6 +1,6 @@
 ﻿Public Class WebPagesOptions
 
-    Public Property StateProvider As IStateSerializer
+    Public Property StateProvider As IStateProvider
 
     Public Property TemplateProvider As ITemplateProvider
 

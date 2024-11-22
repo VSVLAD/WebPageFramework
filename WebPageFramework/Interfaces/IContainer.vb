@@ -10,6 +10,6 @@ Public Interface IContainer
     ''' <summary>
     ''' Объект состояния прикрепленный к контейнеру
     ''' </summary>
-    Property ViewState As Dictionary(Of String, Object)
+    Property ViewState As StateObject
 
 End Interface

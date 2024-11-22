@@ -4,6 +4,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>WebPages</RootNamespace>
     <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>Latest</LangVersion>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
 

@@ -96,17 +96,17 @@ Namespace Controls
             End If
         End Sub
 
-        Public Overrides Sub FromState(State As Dictionary(Of String, Object))
+        Public Overrides Sub FromState(State As StateObject)
             MyBase.FromState(State)
 
             If EnableState Then
                 If State.ContainsKey(NameOf(SelectedValue)) Then SelectedValue = CStr(State(NameOf(SelectedValue)))
                 If State.ContainsKey(NameOf(Multiple)) Then Multiple = CBool(State(NameOf(Multiple)))
-                If State.ContainsKey(NameOf(Items)) Then Items = DirectCast(State(NameOf(Items)), List(Of ComboBoxItem))
+                If State.ContainsKey(NameOf(Items)) Then Items = State(NameOf(Items))
             End If
         End Sub
 
-        Public Overrides Function ToState() As Dictionary(Of String, Object)
+        Public Overrides Function ToState() As StateObject
             Dim state = MyBase.ToState()
 
             If EnableState Then

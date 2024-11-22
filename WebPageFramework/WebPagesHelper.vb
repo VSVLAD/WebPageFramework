@@ -3,8 +3,8 @@
 Public Class WebPagesHelper
 
     ' Создать объект состояния
-    Public Shared Function GenerateState(Page As IPage, StateProvider As IStateSerializer) As String
-        Dim treeState As New Dictionary(Of String, Object)
+    Public Shared Function GenerateState(Page As IPage, StateProvider As IStateProvider) As String
+        Dim treeState As New StateObject
 
         ' Добавляем состояние формы
         treeState(Page.Id) = Page.ToState()
@@ -22,7 +22,7 @@ Public Class WebPagesHelper
     End Function
 
     ' Загружаем объект состояния и применяем к элементам управления
-    Public Shared Sub ApplyState(Page As IPage, StateProvider As IStateSerializer)
+    Public Shared Sub ApplyState(Page As IPage, StateProvider As IStateProvider)
         Dim viewState = Page.Form("viewState")
 
         If Not String.IsNullOrEmpty(viewState) Then

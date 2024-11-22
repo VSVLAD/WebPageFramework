@@ -16,7 +16,7 @@ Public MustInherit Class Fragment
     Public Property EnableState As Boolean Implements IState.EnableState
     Public Property Controls As Dictionary(Of String, IHtmlControl) Implements IContainer.Controls
     Public Property ViewData As Dictionary(Of String, Object) Implements IFragment.ViewData
-    Public Property ViewState As Dictionary(Of String, Object) Implements IContainer.ViewState
+    Public Property ViewState As StateObject Implements IContainer.ViewState
 
     Public Event Init() Implements IContainerEvents.Init
     Public Event Load(FirstRun As Boolean) Implements IContainerEvents.Load
@@ -43,7 +43,7 @@ Public MustInherit Class Fragment
         ' Значения по-умолчанию
         Me.Controls = New Dictionary(Of String, IHtmlControl)
         Me.ViewData = New Dictionary(Of String, Object)
-        Me.ViewState = New Dictionary(Of String, Object)
+        Me.ViewState = New StateObject()
 
         ' Значения по-умолчанию как для контрола
         Me.Attributes = New Dictionary(Of String, String)
@@ -124,10 +124,10 @@ Public MustInherit Class Fragment
     Public Sub ProcessFormData(Value As String) Implements IHtmlControl.ProcessFormData
     End Sub
 
-    Public Sub FromState(State As Dictionary(Of String, Object)) Implements IState.FromState
+    Public Sub FromState(State As StateObject) Implements IState.FromState
     End Sub
 
-    Public Function ToState() As Dictionary(Of String, Object) Implements IState.ToState
+    Public Function ToState() As StateObject Implements IState.ToState
     End Function
 
     Public Sub OnInit() Implements IContainerEvents.OnInit

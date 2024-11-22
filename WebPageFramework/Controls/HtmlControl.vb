@@ -54,7 +54,7 @@ Namespace Controls
         ''' <summary>
         ''' Восстанавливаем свойства контрола из объекта состояния
         ''' </summary>
-        Public Overridable Sub FromState(State As Dictionary(Of String, Object)) Implements IState.FromState
+        Public Overridable Sub FromState(State As StateObject) Implements IState.FromState
             If State.ContainsKey(NameOf(EnableState)) Then EnableState = CBool(State(NameOf(EnableState)))
 
             If EnableState Then
@@ -62,15 +62,15 @@ Namespace Controls
                 If State.ContainsKey(NameOf(Visible)) Then Visible = CBool(State(NameOf(Visible)))
                 If State.ContainsKey(NameOf(Enabled)) Then Enabled = CBool(State(NameOf(Enabled)))
                 If State.ContainsKey(NameOf(CSS)) Then CSS = CStr(State(NameOf(CSS)))
-                If State.ContainsKey(NameOf(Attributes)) Then Attributes = DirectCast(State(NameOf(Attributes)), Dictionary(Of String, String))
+                If State.ContainsKey(NameOf(Attributes)) Then Attributes = State(NameOf(Attributes))
             End If
         End Sub
 
         ''' <summary>
         ''' Сохраняем свойства контрола в объект состояния
         ''' </summary>
-        Public Overridable Function ToState() As Dictionary(Of String, Object) Implements IState.ToState
-            Dim state As New Dictionary(Of String, Object)
+        Public Overridable Function ToState() As StateObject Implements IState.ToState
+            Dim state As New StateObject()
 
             ' Принудительно добавляем свойство в состояние
             state(NameOf(EnableState)) = CStr(EnableState)

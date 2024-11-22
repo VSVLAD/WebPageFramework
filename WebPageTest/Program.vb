@@ -1,7 +1,7 @@
 Imports Microsoft.AspNetCore.Builder
 Imports Microsoft.Extensions.DependencyInjection
-Imports WebPages
 Imports System.Text
+Imports WebPages
 
 Public Module Program
 

@@ -1,5 +1,4 @@
-﻿Imports WebPages.Controls
-
+﻿
 Public Interface ITemplateProvider
 
     ''' <summary>
