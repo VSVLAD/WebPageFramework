@@ -6,24 +6,20 @@ Imports System.Text
 Public Class DefaultStateProvider
     Implements IStateProvider
 
-    Private secretPassword As String
-    Private secretSalt As String
+    Private ReadOnly secretPassword As String
+    Private ReadOnly secretSalt As String
 
-    ''' <summary>
-    ''' Требуется ли шифрование данных состояния представления
-    ''' </summary>
-    Public Property IsEncrypting As Boolean
+    ' Требуется ли шифрование данных состояния представления
+    Private ReadOnly isEncrypting As String
 
-    ''' <summary>
-    ''' Требуется ли сжатие данных состояния представления
-    ''' </summary>
-    Public Property IsCompressing As Boolean
+    'Требуется ли сжатие данных состояния представления
+    Private ReadOnly isCompressing As String
 
     Public Sub New(SecretPassword As String, SecretSalt As String, IsEncrypting As Boolean, IsCompressing As Boolean)
         Me.secretPassword = SecretPassword
         Me.secretSalt = SecretSalt
-        Me.IsEncrypting = IsEncrypting
-        Me.IsCompressing = IsCompressing
+        Me.isEncrypting = IsEncrypting
+        Me.isCompressing = IsCompressing
     End Sub
 
     ''' <summary>
@@ -35,12 +31,12 @@ Public Class DefaultStateProvider
             Dim bytesState() As Byte = Encoding.UTF8.GetBytes(State.SerializeWithTypeInfo())
 
             ' Сжимаем
-            If IsCompressing Then
+            If isCompressing Then
                 bytesState = GZipPack(bytesState)
             End If
 
             ' Шифруем
-            If IsEncrypting Then
+            If isEncrypting Then
                 bytesState = AES256Encode(bytesState, secretPassword, secretSalt)
             End If
 
@@ -60,12 +56,12 @@ Public Class DefaultStateProvider
             Dim bytesState() As Byte = Convert.FromBase64String(PackedState)
 
             ' Расшифруем
-            If IsEncrypting Then
+            If isEncrypting Then
                 bytesState = AES256Decode(bytesState, secretPassword, secretSalt)
             End If
 
             ' Расжимаем
-            If IsCompressing Then
+            If isCompressing Then
                 bytesState = GZipUnpack(bytesState)
             End If
 
@@ -81,7 +77,7 @@ Public Class DefaultStateProvider
     ''' <summary>
     ''' Упаковать данные в GZIP
     ''' </summary>
-    Friend Function GZipPack(Source() As Byte) As Byte()
+    Private Shared Function GZipPack(Source() As Byte) As Byte()
         Using compressedStream As New MemoryStream()
             Using gzipStream As New GZipStream(compressedStream, CompressionMode.Compress, True)
                 gzipStream.Write(Source, 0, Source.Length)
@@ -94,7 +90,7 @@ Public Class DefaultStateProvider
     ''' <summary>
     ''' Распаковать данные из GZIP
     ''' </summary>
-    Friend Function GZipUnpack(Source() As Byte) As Byte()
+    Private Shared Function GZipUnpack(Source() As Byte) As Byte()
         Using compressedStream As New MemoryStream(Source)
             Using gzipStream As New GZipStream(compressedStream, CompressionMode.Decompress)
                 Using decompressedStream As New MemoryStream()
@@ -108,7 +104,7 @@ Public Class DefaultStateProvider
     ''' <summary>
     ''' Создание ключа по пользовательскому паролю и соли. Выполняется деривация ключа с использованием PBKDF2. Для AES256 нужен ключ 32 бита
     ''' </summary>
-    Friend Function GenerateAESKey(Password As String, Salt As String, Optional KeySizeBits As Integer = 256) As Byte()
+    Private Shared Function GenerateAESKey(Password As String, Salt As String, Optional KeySizeBits As Integer = 256) As Byte()
         Dim pbkdf2 As New Rfc2898DeriveBytes(Encoding.UTF8.GetBytes(Password), Encoding.UTF8.GetBytes(Salt), 10000, HashAlgorithmName.SHA256)
         Return pbkdf2.GetBytes(CInt(KeySizeBits / 8))
     End Function
@@ -116,7 +112,7 @@ Public Class DefaultStateProvider
     ''' <summary>
     ''' Зашифровать данные в AES
     ''' </summary>
-    Friend Function AES256Encode(Source() As Byte, Password As String, Salt As String) As Byte()
+    Private Shared Function AES256Encode(Source() As Byte, Password As String, Salt As String) As Byte()
         Using aesAlg As Aes = Aes.Create()
             aesAlg.IV = RandomNumberGenerator.GetBytes(16)
             aesAlg.Key = GenerateAESKey(Password, Salt)
@@ -140,7 +136,7 @@ Public Class DefaultStateProvider
     ''' <summary>
     ''' Расшифровать данные в AES
     ''' </summary>
-    Friend Function AES256Decode(Source() As Byte, Password As String, Salt As String) As Byte()
+    Private Shared Function AES256Decode(Source() As Byte, Password As String, Salt As String) As Byte()
         Using aesAlg As Aes = Aes.Create()
             aesAlg.IV = Source.Take(16).ToArray() ' Читаем IV
             aesAlg.Key = GenerateAESKey(Password, Salt)

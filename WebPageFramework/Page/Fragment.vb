@@ -15,7 +15,7 @@ Public MustInherit Class Fragment
     Public Property Id As String Implements IControl.Id
     Public Property EnableState As Boolean Implements IState.EnableState
     Public Property Controls As Dictionary(Of String, IHtmlControl) Implements IContainer.Controls
-    Public Property ViewData As Dictionary(Of String, Object) Implements IFragment.ViewData
+    Public Property ViewData As StateObject Implements IFragment.ViewData
     Public Property ViewState As StateObject Implements IContainer.ViewState
 
     Public Event Init() Implements IContainerEvents.Init
@@ -25,8 +25,8 @@ Public MustInherit Class Fragment
     Public ReadOnly Property Page As IPage
 
     Protected Sub New(Parent As IContainer, Id As String)
-        If Parent Is Nothing Then Throw New ArgumentNullException(NameOf(Parent))
-        If Id Is Nothing Then Throw New ArgumentNullException(NameOf(Id))
+        ArgumentNullException.ThrowIfNull(NameOf(Parent))
+        ArgumentNullException.ThrowIfNull(NameOf(Id))
 
         ' Основные идентификаторы
         Me.Id = Id
@@ -42,7 +42,7 @@ Public MustInherit Class Fragment
 
         ' Значения по-умолчанию
         Me.Controls = New Dictionary(Of String, IHtmlControl)
-        Me.ViewData = New Dictionary(Of String, Object)
+        Me.ViewData = New StateObject()
         Me.ViewState = New StateObject()
 
         ' Значения по-умолчанию как для контрола

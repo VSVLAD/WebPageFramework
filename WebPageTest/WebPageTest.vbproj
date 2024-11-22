@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>WebApp</RootNamespace>
     <TargetFramework>net8.0</TargetFramework>
   </PropertyGroup>
 

@@ -14,7 +14,7 @@ Public MustInherit Class Page
     Public Property Id As String Implements IControl.Id
     Public Property Controls As Dictionary(Of String, IHtmlControl) Implements IContainer.Controls
     Public Property ViewState As StateObject Implements IContainer.ViewState
-    Public Property ViewData As Dictionary(Of String, Object) Implements IViewData.ViewData
+    Public Property ViewData As StateObject Implements IViewData.ViewData
     Public Property EnableState As Boolean Implements IState.EnableState
 
     Public Event Init() Implements IContainerEvents.Init
@@ -25,7 +25,7 @@ Public MustInherit Class Page
 
         ' Значения по-умолчанию
         Me.Controls = New Dictionary(Of String, IHtmlControl)
-        Me.ViewData = New Dictionary(Of String, Object)
+        Me.ViewData = New StateObject()
         Me.ViewState = New StateObject()
         Me.EnableState = True
     End Sub

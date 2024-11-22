@@ -1,4 +1,6 @@
 ﻿Public Class StateObject
+    Implements IEnumerable(Of KeyValuePair(Of String, Object))
+
     Private ReadOnly innerState As Dictionary(Of String, Object)
 
     ' Конструктор для инициализации пустого состояния
@@ -44,6 +46,16 @@
     ' Метод для получения исходного Dictionary(Of String, Object)
     Public Function ToDictionary() As Dictionary(Of String, Object)
         Return innerState
+    End Function
+
+    ' Для получения перечислителя, чтобы использовать цикл по коллекции
+    Public Function GetEnumerator() As IEnumerator(Of KeyValuePair(Of String, Object)) Implements IEnumerable(Of KeyValuePair(Of String, Object)).GetEnumerator
+        Return innerState.GetEnumerator()
+    End Function
+
+    ' Для получения перечислителя, чтобы использовать цикл по коллекции
+    Private Function GetEnumeratorObj() As IEnumerator Implements IEnumerable.GetEnumerator
+        Return innerState.GetEnumerator()
     End Function
 
 End Class

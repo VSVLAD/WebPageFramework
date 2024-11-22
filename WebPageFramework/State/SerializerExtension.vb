@@ -6,7 +6,7 @@ Imports System.Text.Json.Serialization
 
 Public Module SerializerExtension
 
-    Private serializerOptions As New JsonSerializerOptions() With {.Encoder = JavaScriptEncoder.Create(Unicode.UnicodeRanges.All)}
+    Private ReadOnly serializerOptions As New JsonSerializerOptions() With {.Encoder = JavaScriptEncoder.Create(Unicode.UnicodeRanges.All)}
 
     Private Class StateTypeInfo
 
