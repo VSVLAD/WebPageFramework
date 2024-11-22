@@ -11,13 +11,20 @@ Namespace Controls
 
         Public Sub New(Parent As IContainer, Id As String)
             MyBase.New(Parent, Id)
+
+            ' Значения по-умолчанию
+            Me.HRef = String.Empty
+            Me.Text = String.Empty
         End Sub
 
         Public Event Click As Action(Of LinkButton, String)
 
-        Public Property HRef As String = ""
+        Public Property HRef As String
 
-        Public Property Html As String = ""
+        ''' <summary>
+        ''' Свойство поддерживает HTML-разметку
+        ''' </summary>
+        Public Property Text As String
 
         Public Overrides Function RenderHtml() As String
             If Not Visible Then Return String.Empty
@@ -46,14 +53,22 @@ Namespace Controls
                 End If
             End If
 
-            strBuffer.Append($">{Html}</a>")
+            strBuffer.Append($">{Text}</a>")
 
             Return strBuffer.ToString()
         End Function
 
+        Public Overrides Function RenderScript() As String
+            Return String.Empty
+        End Function
+
+        Public Overrides Sub ProcessFormData(Value As String)
+        End Sub
+
         Public Overrides Sub ProcessEvent(EventName As String, EventArgument As String)
-            If EnableEvents AndAlso EventName = "Click" Then RaiseEvent Click(Me, EventArgument)
-            MyBase.ProcessEvent(EventName, EventArgument)
+            If EnableEvents AndAlso EventName = "Click" Then
+                RaiseEvent Click(Me, EventArgument)
+            End If
         End Sub
 
         Public Overrides Sub FromState(State As Dictionary(Of String, Object))
@@ -61,7 +76,7 @@ Namespace Controls
 
             If EnableState Then
                 If State.ContainsKey(NameOf(HRef)) Then HRef = State(NameOf(HRef))
-                If State.ContainsKey(NameOf(Html)) Then Html = State(NameOf(Html))
+                If State.ContainsKey(NameOf(Text)) Then Text = State(NameOf(Text))
             End If
         End Sub
 
@@ -69,8 +84,8 @@ Namespace Controls
             Dim state = MyBase.ToState()
 
             If EnableState Then
-                state(NameOf(HRef)) = HRef
-                state(NameOf(Html)) = Html
+                If Not String.IsNullOrEmpty(HRef) Then state(NameOf(HRef)) = HRef
+                If Not String.IsNullOrEmpty(Text) Then state(NameOf(Text)) = Text
             End If
 
             Return state

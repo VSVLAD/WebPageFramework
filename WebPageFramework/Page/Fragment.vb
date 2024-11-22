@@ -18,6 +18,10 @@ Public MustInherit Class Fragment
     Public Property ViewData As Dictionary(Of String, Object) Implements IFragment.ViewData
     Public Property ViewState As Dictionary(Of String, Object) Implements IContainer.ViewState
 
+    Public Event Init() Implements IContainerEvents.Init
+    Public Event Load(FirstRun As Boolean) Implements IContainerEvents.Load
+    Public Event Render() Implements IContainerEvents.Render
+
     Public ReadOnly Property Page As IPage
 
     Protected Sub New(Parent As IContainer, Id As String)
@@ -36,18 +40,17 @@ Public MustInherit Class Fragment
             Throw New NotImplementedException("Фрагмент в качестве родителя для другого фрагмента пока не поддерживается")
         End If
 
-        ' Свойства по-умолчанию
+        ' Значения по-умолчанию
         Me.Controls = New Dictionary(Of String, IHtmlControl)
         Me.ViewData = New Dictionary(Of String, Object)
         Me.ViewState = New Dictionary(Of String, Object)
 
-        ' Свойства по-умолчанию как для контрола
+        ' Значения по-умолчанию как для контрола
         Me.Attributes = New Dictionary(Of String, String)
         Me.Enabled = True
         Me.Visible = True
         Me.EnableEvents = True
         Me.EnableState = True
-
     End Sub
 
     Public Function RenderHtml() As String Implements IHtmlControl.RenderHtml
@@ -71,7 +74,7 @@ Public MustInherit Class Fragment
         Dim innerFragments = Me.Controls.Where(Function(ctlKv) TypeOf ctlKv.Value Is Fragment).Select(Function(ctlKv) ctlKv.Value)
 
         ' Инициализации внутреннего фрагмента
-        For Each fragm In innerFragments.Cast(Of ILifeCycleEvents)
+        For Each fragm In innerFragments.Cast(Of IContainerEvents)
             fragm.OnInit()
         Next
 
@@ -116,34 +119,26 @@ Public MustInherit Class Fragment
     End Function
 
     Public Sub ProcessEvent(EventName As String, EventArgument As String) Implements IHtmlControl.ProcessEvent
-
     End Sub
 
     Public Sub ProcessFormData(Value As String) Implements IHtmlControl.ProcessFormData
-
     End Sub
 
     Public Sub FromState(State As Dictionary(Of String, Object)) Implements IState.FromState
-
     End Sub
 
     Public Function ToState() As Dictionary(Of String, Object) Implements IState.ToState
-
     End Function
 
-    Public Sub OnInit() Implements ILifeCycleEvents.OnInit
+    Public Sub OnInit() Implements IContainerEvents.OnInit
         RaiseEvent Init()
     End Sub
 
-    Public Sub OnLoad(FirstRun As Boolean) Implements ILifeCycleEvents.OnLoad
+    Public Sub OnLoad(FirstRun As Boolean) Implements IContainerEvents.OnLoad
         RaiseEvent Load(FirstRun)
     End Sub
 
-    Public Event Init() Implements ILifeCycleEvents.Init
-    Public Event Load(FirstRun As Boolean) Implements ILifeCycleEvents.Load
-    Public Event Render() Implements ILifeCycleEvents.Render
-
-    Public Sub OnRender() Implements ILifeCycleEvents.OnRender
+    Public Sub OnRender() Implements IContainerEvents.OnRender
         RaiseEvent Render()
     End Sub
 

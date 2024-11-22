@@ -1,4 +1,4 @@
-﻿Public Interface ILifeCycleEvents
+﻿Public Interface IContainerEvents
 
     ''' <summary>
     ''' Выполняется перед обработкой формы

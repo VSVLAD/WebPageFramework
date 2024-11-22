@@ -68,7 +68,7 @@ Public Class WebPagesHelper
 
     ' Для создания заменителей тега формы
     Public Shared Sub GenerateBeginEndViewForm(Page As IPage)
-        Page.ViewData("formBegin") = $"<form name=""{HttpUtility.HtmlAttributeEncode(Page.Id)}"" action=""{Page.Context.Request.Path}"" method=""post"">
+        Page.ViewData("__formBegin") = $"<form name=""{HttpUtility.HtmlAttributeEncode(Page.Id)}"" action=""{Page.Context.Request.Path}"" method=""post"">
 <input type=""hidden"" name=""eventControl"" value="""" />
 <input type=""hidden"" name=""eventName"" value="""" />
 <input type=""hidden"" name=""eventArgument"" value="""" />
@@ -84,12 +84,12 @@ Public Class WebPagesHelper
     }}
 </script>
 "
-        Page.ViewData("formEnd") = "</form>"
+        Page.ViewData("__formEnd") = "</form>"
     End Sub
 
     ' Создаёт заполнитель для объекта состояния
     Public Shared Sub GenerateStateViewForm(Page As IPage, PackedState As String)
-        Page.ViewData("formViewState") = $"<input type=""hidden"" name=""viewState"" value=""{PackedState}"" />"
+        Page.ViewData("__formViewState") = $"<input type=""hidden"" name=""viewState"" value=""{PackedState}"" />"
     End Sub
 
 End Class

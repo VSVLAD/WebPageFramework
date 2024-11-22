@@ -26,8 +26,13 @@ Public Interface IPage
     Property Form As IFormCollection
 
     ''' <summary>
-    ''' Фреймворк вызывает, чтобы страница загрузила состояние, обработала данные формы, сохранила состояние и отрисовала контент
+    ''' Фреймворк вызывает, чтобы страница загрузила состояние, обработала данные формы, сохранила состояние
     ''' </summary>
-    Function ProcessAsync() As Task(Of String)
+    Function ProcessAsync() As Task
+
+    ''' <summary>
+    ''' Фреймворк вызывает, чтобы отрисовать контент
+    ''' </summary>
+    Function RenderAsync() As Task(Of String)
 
 End Interface

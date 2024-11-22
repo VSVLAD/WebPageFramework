@@ -11,19 +11,22 @@ Namespace Controls
 
         Public Sub New(Parent As IContainer, Id As String)
             MyBase.New(Parent, Id)
+
+            ' Значения по-умолчанию
+            Me.SelectedItem = Nothing
+            Me.SelectedText = String.Empty
+            Me.SelectedValue = String.Empty
+            Me.Multiple = False
+            Me.Items = New List(Of ComboBoxItem)
         End Sub
 
         Public Event SelectedItemChanged As Action(Of ComboBox, String)
 
-        Public Property SelectedText As String = ""
-
-        Public Property SelectedValue As String = ""
-
-        Public Property SelectedItem As ComboBoxItem = Nothing
-
-        Public Property Multiple As Boolean = False
-
-        Public Property Items As New List(Of ComboBoxItem)
+        Public Property SelectedText As String
+        Public Property SelectedValue As String
+        Public Property SelectedItem As ComboBoxItem
+        Public Property Items As List(Of ComboBoxItem)
+        Public Property Multiple As Boolean
 
         Public Overrides Function RenderHtml() As String
             If Not Visible Then Return String.Empty
@@ -69,9 +72,14 @@ Namespace Controls
             Return strBuffer.ToString()
         End Function
 
+        Public Overrides Function RenderScript() As String
+            Return String.Empty
+        End Function
+
         Public Overrides Sub ProcessEvent(EventName As String, EventArgument As String)
-            If EnableEvents AndAlso EventName = "SelectedItemChanged" Then RaiseEvent SelectedItemChanged(Me, EventArgument)
-            MyBase.ProcessEvent(EventName, EventArgument)
+            If EnableEvents AndAlso EventName = "SelectedItemChanged" Then
+                RaiseEvent SelectedItemChanged(Me, EventArgument)
+            End If
         End Sub
 
         Public Overrides Sub ProcessFormData(Value As String)
@@ -86,8 +94,6 @@ Namespace Controls
                 Me.SelectedItem = Nothing
                 Me.SelectedText = String.Empty
             End If
-
-            MyBase.ProcessFormData(Value)
         End Sub
 
         Public Overrides Sub FromState(State As Dictionary(Of String, Object))
@@ -104,18 +110,19 @@ Namespace Controls
             Dim state = MyBase.ToState()
 
             If EnableState Then
-                state(NameOf(SelectedValue)) = SelectedValue
-                state(NameOf(Multiple)) = Multiple
-                state(NameOf(Items)) = Items
+                If Not String.IsNullOrEmpty(SelectedValue) Then state(NameOf(SelectedValue)) = SelectedValue
+                If Multiple Then state(NameOf(Multiple)) = Multiple
+                If Items.Count > 0 Then state(NameOf(Items)) = Items
             End If
 
             Return state
         End Function
 
+
     End Class
 
     ''' <summary>
-    ''' Представляет однин элемент опции в элементе select
+    ''' Представляет один элемент option для элемента select
     ''' </summary>
     Public Class ComboBoxItem
         Public Property Text As String

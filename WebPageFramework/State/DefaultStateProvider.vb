@@ -12,16 +12,18 @@ Public Class DefaultStateProvider
     ''' <summary>
     ''' Требуется ли шифрование данных состояния представления
     ''' </summary>
-    Friend Property EncryptAES As Boolean = True
+    Public Property IsEncrypting As Boolean
 
     ''' <summary>
     ''' Требуется ли сжатие данных состояния представления
     ''' </summary>
-    Friend Property CompressGZIP As Boolean = True
+    Public Property IsCompressing As Boolean
 
-    Public Sub New(SecretPassword As String, SecretSalt As String)
+    Public Sub New(SecretPassword As String, SecretSalt As String, IsEncrypting As Boolean, IsCompressing As Boolean)
         Me.secretPassword = SecretPassword
         Me.secretSalt = SecretSalt
+        Me.IsEncrypting = IsEncrypting
+        Me.IsCompressing = IsCompressing
     End Sub
 
     ''' <summary>
@@ -33,12 +35,12 @@ Public Class DefaultStateProvider
             Dim bytesState() As Byte = Encoding.UTF8.GetBytes(State.SerializeWithTypeInfo())
 
             ' Сжимаем
-            If CompressGZIP Then
+            If IsCompressing Then
                 bytesState = GZipPack(bytesState)
             End If
 
             ' Шифруем
-            If EncryptAES Then
+            If IsEncrypting Then
                 bytesState = AES256Encode(bytesState, secretPassword, secretSalt)
             End If
 
@@ -58,12 +60,12 @@ Public Class DefaultStateProvider
             Dim bytesState() As Byte = Convert.FromBase64String(PackedState)
 
             ' Расшифруем
-            If EncryptAES Then
+            If IsEncrypting Then
                 bytesState = AES256Decode(bytesState, secretPassword, secretSalt)
             End If
 
             ' Расжимаем
-            If CompressGZIP Then
+            If IsCompressing Then
                 bytesState = GZipUnpack(bytesState)
             End If
 

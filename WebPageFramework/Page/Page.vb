@@ -5,7 +5,7 @@ Imports Microsoft.AspNetCore.Http
 Imports WebPages.Controls
 
 Public MustInherit Class Page
-    Implements IPage, IState, ILifeCycleEvents
+    Implements IPage, IState, IContainerEvents
 
     Public Property Context As HttpContext Implements IPage.Context
     Public Property Environment As IWebHostEnvironment Implements IPage.Environment
@@ -17,8 +17,13 @@ Public MustInherit Class Page
     Public Property ViewData As Dictionary(Of String, Object) Implements IViewData.ViewData
     Public Property EnableState As Boolean Implements IState.EnableState
 
+    Public Event Init() Implements IContainerEvents.Init
+    Public Event Load(FirstRun As Boolean) Implements IContainerEvents.Load
+    Public Event Render() Implements IContainerEvents.Render
+
     Protected Friend Sub New()
-        ' Свойства по-умолчанию
+
+        ' Значения по-умолчанию
         Me.Controls = New Dictionary(Of String, IHtmlControl)
         Me.ViewData = New Dictionary(Of String, Object)
         Me.ViewState = New Dictionary(Of String, Object)
@@ -28,7 +33,7 @@ Public MustInherit Class Page
     ''' <summary>
     ''' Обработка формы
     ''' </summary>
-    Public Overridable Async Function ProcessAsync() As Task(Of String) Implements IPage.ProcessAsync
+    Public Overridable Async Function ProcessAsync() As Task Implements IPage.ProcessAsync
 
         ' Храним данные в кеше, чтобы можно было возвращаться кнопкой назад в браузере
         Me.Context.Response.Headers.CacheControl = "private"
@@ -44,7 +49,7 @@ Public MustInherit Class Page
         Me.OnInit()
 
         ' Инициализация фрагментов
-        For Each frag In innerFragments.Cast(Of ILifeCycleEvents)
+        For Each frag In innerFragments.Cast(Of IContainerEvents)
             frag.OnInit()
         Next
 
@@ -64,7 +69,7 @@ Public MustInherit Class Page
             Me.OnLoad(False)
 
             ' Затем событие загрузки фрагментов
-            For Each fragm In innerFragments.Cast(Of ILifeCycleEvents)
+            For Each fragm In innerFragments.Cast(Of IContainerEvents)
                 fragm.OnLoad(False)
             Next
 
@@ -76,25 +81,44 @@ Public MustInherit Class Page
             Me.OnLoad(True)
 
             ' После первичная загрузка фрагментов
-            For Each frag In innerFragments.Cast(Of ILifeCycleEvents)
+            For Each frag In innerFragments.Cast(Of IContainerEvents)
                 frag.OnLoad(True)
             Next
 
         End If
 
-        ' Генерируем заменители для формы
-        WebPagesHelper.GenerateBeginEndViewForm(Me)
+    End Function
 
-        ' Генерируем заполнитель для состояния
-        WebPagesHelper.GenerateStateViewForm(Me, WebPagesHelper.GenerateState(Me, Options.StateProvider))
+    Public Async Function RenderAsync() As Task(Of String) Implements IPage.RenderAsync
 
-        ' Подсказываем, что начинаем генерировать контент
+        ' Вызываем событие перед генерацией контента
         Me.OnRender()
 
         ' Читаем шаблон
         Dim tplContent = Options.TemplateProvider.GetTemplate(Me.Id)
 
-        ' Отрисовываем системные и пользовательские заменители
+        ' Генерируем заполнитель для формы
+        WebPagesHelper.GenerateBeginEndViewForm(Me)
+
+        ' Генерируем заполнитель для состояния
+        WebPagesHelper.GenerateStateViewForm(Me, WebPagesHelper.GenerateState(Me, Options.StateProvider))
+
+        ' Отрисовываем системные заполнители
+        Dim lastTemplateLength = tplContent.Length
+        tplContent.Replace("<body>", $"<body>{ViewData("__formBegin")}{ViewData("__formViewState")}")
+
+        If lastTemplateLength = tplContent.Length Then
+            Throw New Exception($"Шаблон страницы ""{Id}"" должен содержать тег <body>")
+        End If
+
+        lastTemplateLength = tplContent.Length
+        tplContent.Replace("</body>", $"{ViewData("__formEnd")}</body>")
+
+        If lastTemplateLength = tplContent.Length Then
+            Throw New Exception($"Шаблон страницы ""{Id}"" должен содержать тег </body>")
+        End If
+
+        ' Отрисовываем пользовательские заполнители
         For Each item In ViewData
             tplContent.Replace($"{{{{ {item.Key} }}}}", item.Value.ToString())
         Next
@@ -116,19 +140,15 @@ Public MustInherit Class Page
         ViewState = State
     End Sub
 
-    Public Overridable Sub OnInit() Implements ILifeCycleEvents.OnInit
+    Public Overridable Sub OnInit() Implements IContainerEvents.OnInit
         RaiseEvent Init()
     End Sub
 
-    Public Overridable Sub OnLoad(FirstRun As Boolean) Implements ILifeCycleEvents.OnLoad
+    Public Overridable Sub OnLoad(FirstRun As Boolean) Implements IContainerEvents.OnLoad
         RaiseEvent Load(FirstRun)
     End Sub
 
-    Public Event Init() Implements ILifeCycleEvents.Init
-    Public Event Load(FirstRun As Boolean) Implements ILifeCycleEvents.Load
-    Public Event Render() Implements ILifeCycleEvents.Render
-
-    Public Overridable Sub OnRender() Implements ILifeCycleEvents.OnRender
+    Public Overridable Sub OnRender() Implements IContainerEvents.OnRender
         RaiseEvent Render()
     End Sub
 

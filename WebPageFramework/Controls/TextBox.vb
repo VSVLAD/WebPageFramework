@@ -11,15 +11,18 @@ Namespace Controls
 
         Public Sub New(Parent As IContainer, Id As String)
             MyBase.New(Parent, Id)
+
+            ' Значения по-умолчанию
+            Me.Text = String.Empty
+            Me.MultiLine = False
+            Me.Rows = 0
         End Sub
 
         Public Event TextChanged As Action(Of TextBox, String)
 
-        Public Property Text As String = ""
-
-        Public Property MultiLine As Boolean = False
-
-        Public Property Rows As Integer = 0
+        Public Property Text As String
+        Public Property MultiLine As Boolean
+        Public Property Rows As Integer
 
         Public Overrides Function RenderHtml() As String
             If Not Visible Then Return String.Empty
@@ -80,14 +83,18 @@ Namespace Controls
             Return strBuffer.ToString()
         End Function
 
+        Public Overrides Function RenderScript() As String
+            Return String.Empty
+        End Function
+
         Public Overrides Sub ProcessEvent(EventName As String, EventArgument As String)
-            If EnableEvents AndAlso EventName = "TextChanged" Then RaiseEvent TextChanged(Me, EventArgument)
-            MyBase.ProcessEvent(EventName, EventArgument)
+            If EnableEvents AndAlso EventName = "TextChanged" Then
+                RaiseEvent TextChanged(Me, EventArgument)
+            End If
         End Sub
 
         Public Overrides Sub ProcessFormData(Value As String)
-            Text = Value
-            MyBase.ProcessFormData(Value)
+            Me.Text = Value
         End Sub
 
         Public Overrides Sub FromState(State As Dictionary(Of String, Object))
@@ -104,9 +111,9 @@ Namespace Controls
             Dim state = MyBase.ToState()
 
             If EnableState Then
-                state(NameOf(Text)) = Text
-                state(NameOf(MultiLine)) = MultiLine
-                state(NameOf(Rows)) = Rows
+                If Not String.IsNullOrEmpty(Text) Then state(NameOf(Text)) = Text
+                If MultiLine Then state(NameOf(MultiLine)) = MultiLine
+                If Rows > 0 Then state(NameOf(Rows)) = Rows
             End If
 
             Return state

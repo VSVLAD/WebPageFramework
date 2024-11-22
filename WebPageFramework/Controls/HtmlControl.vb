@@ -11,15 +11,16 @@ Namespace Controls
             If Parent Is Nothing Then Throw New ArgumentNullException(NameOf(Parent))
             If Id Is Nothing Then Throw New ArgumentNullException(NameOf(Id))
 
+            ' Основные свйоства
             Me.Id = Id
             Me.Parent = Parent
 
-            ' Свойства по-умолчанию
+            ' Значение свойств по-умолчанию, далее их могут перебивать значения из состояния
             Me.Attributes = New Dictionary(Of String, String)
+            Me.EnableState = True
             Me.Enabled = True
             Me.Visible = True
             Me.EnableEvents = True
-            Me.EnableState = True
 
             ' Добавляем элемент в коллекцию контролов родителя
             Me.Parent.Controls.Add(Id, Me)
@@ -41,19 +42,14 @@ Namespace Controls
 
         Public Property EnableState As Boolean Implements IState.EnableState
 
-        Public Overridable Function RenderHtml() As String Implements IHtmlControl.RenderHtml
-            Return String.Empty
-        End Function
 
-        Public Overridable Function RenderScript() As String Implements IHtmlControl.RenderScript
-            Return String.Empty
-        End Function
+        Public MustOverride Function RenderHtml() As String Implements IHtmlControl.RenderHtml
 
-        Public Overridable Sub ProcessEvent(EventName As String, EventArgument As String) Implements IHtmlControl.ProcessEvent
-        End Sub
+        Public MustOverride Function RenderScript() As String Implements IHtmlControl.RenderScript
 
-        Public Overridable Sub ProcessFormData(Value As String) Implements IHtmlControl.ProcessFormData
-        End Sub
+        Public MustOverride Sub ProcessEvent(EventName As String, EventArgument As String) Implements IHtmlControl.ProcessEvent
+
+        Public MustOverride Sub ProcessFormData(Value As String) Implements IHtmlControl.ProcessFormData
 
         ''' <summary>
         ''' Восстанавливаем свойства контрола из объекта состояния
@@ -75,13 +71,16 @@ Namespace Controls
         ''' </summary>
         Public Overridable Function ToState() As Dictionary(Of String, Object) Implements IState.ToState
             Dim state As New Dictionary(Of String, Object)
+
+            ' Принудительно добавляем свойство в состояние
             state(NameOf(EnableState)) = CStr(EnableState)
 
             If EnableState Then
-                state(NameOf(Visible)) = CStr(Visible)
-                state(NameOf(Enabled)) = CStr(Enabled)
-                state(NameOf(CSS)) = CSS
-                state(NameOf(Attributes)) = Attributes
+                ' Только те свойства, значения которых изменились от умолчания
+                If Not Visible Then state(NameOf(Visible)) = CStr(Visible)
+                If Not Enabled Then state(NameOf(Enabled)) = CStr(Enabled)
+                If Not String.IsNullOrEmpty(CSS) Then state(NameOf(CSS)) = CSS
+                If Attributes.Count > 0 Then state(NameOf(Attributes)) = Attributes
             End If
 
             Return state
