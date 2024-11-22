@@ -36,10 +36,9 @@ Public MustInherit Class Page
     Public Overridable Async Function ProcessAsync() As Task Implements IPage.ProcessAsync
 
         ' Храним данные в кеше, чтобы можно было возвращаться кнопкой назад в браузере
-        Me.Context.Response.Headers.CacheControl = "private"
-        Me.Context.Response.Headers.Date = Date.Now.ToUniversalTime().ToString("R")
-
-        ' Тип по-умолчанию
+        Me.Context.Response.Headers.CacheControl = "private,max-age=604800,no-transform"
+        Me.Context.Response.Headers.ETag = DateTimeOffset.UtcNow.ToUnixTimeSeconds.ToString()
+        Me.Context.Response.Headers.Expires = Date.Now.AddDays(7).ToUniversalTime().ToString("R")
         Me.Context.Response.ContentType = "text/html"
 
         ' Выбираем все фрагменты на странице
