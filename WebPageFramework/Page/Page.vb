@@ -105,17 +105,17 @@ Public MustInherit Class Page
 
         ' Отрисовываем системные заполнители
         Dim lastTemplateLength = tplContent.Length
-        tplContent.Replace("<body>", $"<body>{ViewData("__formBegin")}{ViewData("__formViewState")}")
+        tplContent.Replace("<form>", $"<form>{ViewData("__formBegin")}{ViewData("__formViewState")}")
 
         If lastTemplateLength = tplContent.Length Then
-            Throw New Exception($"Шаблон страницы ""{Id}"" должен содержать тег <body>")
+            Throw New Exception($"Шаблон страницы ""{Id}"" должен содержать начальный тег <form> без атрибутов")
         End If
 
         lastTemplateLength = tplContent.Length
-        tplContent.Replace("</body>", $"{ViewData("__formEnd")}</body>")
+        tplContent.Replace("</form>", $"{ViewData("__formEnd")} ")
 
         If lastTemplateLength = tplContent.Length Then
-            Throw New Exception($"Шаблон страницы ""{Id}"" должен содержать тег </body>")
+            Throw New Exception($"Шаблон страницы ""{Id}"" должен содержать закрывающий тег </form>")
         End If
 
         ' Отрисовываем пользовательские заполнители
