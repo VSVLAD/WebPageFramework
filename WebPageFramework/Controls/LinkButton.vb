@@ -49,7 +49,7 @@ Namespace Controls
                 If Not String.IsNullOrEmpty(HRef) Then
                     strBuffer.Append($" href=""{HttpUtility.HtmlAttributeEncode(HRef)}""")
                 Else
-                    strBuffer.Append($" onclick=""doPostBack('{Id}','Click', '')""")
+                    strBuffer.Append($" onclick=""wpPostBack('{Id}','Click', '')""")
                 End If
             End If
 

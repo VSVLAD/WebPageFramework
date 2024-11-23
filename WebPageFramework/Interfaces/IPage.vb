@@ -28,11 +28,11 @@ Public Interface IPage
     ''' <summary>
     ''' Фреймворк вызывает, чтобы страница загрузила состояние, обработала данные формы, сохранила состояние
     ''' </summary>
-    Function ProcessAsync() As Task
+    Sub Process()
 
     ''' <summary>
     ''' Фреймворк вызывает, чтобы отрисовать контент
     ''' </summary>
-    Function RenderAsync() As Task(Of String)
+    Function Render() As String
 
 End Interface

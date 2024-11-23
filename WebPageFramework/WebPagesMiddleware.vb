@@ -28,10 +28,10 @@ Public Class WebPagesMiddleware
             Dim pageInstance = WebPageFactory.Create(pageType, context, env, options)
 
             ' Выполняем обработку формы 
-            Await pageInstance.ProcessAsync()
+            pageInstance.Process()
 
             ' Выполняем отрисовку формы, заменяем плейсхолдеры {{ item }} в шаблоне
-            Dim content = Await pageInstance.RenderAsync()
+            Dim content = pageInstance.Render()
 
             ' Возвращаем контент
             Await context.Response.WriteAsync(content, Encoding.UTF8)

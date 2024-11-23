@@ -7,6 +7,8 @@ Namespace Controls
     Public MustInherit Class HtmlControl
         Implements IHtmlControl, IState
 
+        Public Const AAAA = 112
+
         Public Sub New(Parent As IContainer, Id As String)
             If Parent Is Nothing Then Throw New ArgumentNullException(NameOf(Parent))
             If Id Is Nothing Then Throw New ArgumentNullException(NameOf(Id))

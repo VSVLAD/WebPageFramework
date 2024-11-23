@@ -7,6 +7,13 @@ Imports WebPages.Controls
 Public MustInherit Class Page
     Implements IPage, IState, IContainerEvents
 
+    ' Название полей для внутренней инфраструктуры состояния и событий
+    Public Const FieldNameEventControl = "wpEventControl"
+    Public Const FieldNameEventName = "wpEventName"
+    Public Const FieldNameEventArgument = "wpEventArgument"
+    Public Const FieldNameViewState = "wpViewState"
+    Public Const FunctionNamePostBack = "wpPostBack"
+
     Public Property Context As HttpContext Implements IPage.Context
     Public Property Environment As IWebHostEnvironment Implements IPage.Environment
     Public Property Options As WebPagesOptions Implements IPage.Options
@@ -33,13 +40,19 @@ Public MustInherit Class Page
     ''' <summary>
     ''' Обработка формы
     ''' </summary>
-    Public Overridable Async Function ProcessAsync() As Task Implements IPage.ProcessAsync
+    Public Overridable Sub ProcessPage() Implements IPage.Process
 
         ' Храним данные в кеше, чтобы можно было возвращаться кнопкой назад в браузере
-        Me.Context.Response.Headers.CacheControl = "private,max-age=604800,no-transform"
-        Me.Context.Response.Headers.ETag = DateTimeOffset.UtcNow.ToUnixTimeSeconds.ToString()
-        Me.Context.Response.Headers.Expires = Date.Now.AddDays(7).ToUniversalTime().ToString("R")
-        Me.Context.Response.ContentType = "text/html"
+        ' Если используется SSL - соединение должно быть доверенное, иначе в кеш не попадёт!
+        Me.Context.Response.Headers.CacheControl = "private"
+        Me.Context.Response.Headers.Date = Date.Now.ToUniversalTime().ToString("R")
+        Me.Context.Response.ContentType = "text/html; charset=utf8"
+        Me.Context.Response.StatusCode = 200
+
+        ' Для удобства чтения формы
+        If Context.Request.HasFormContentType AndAlso Context.Request.Form.Keys.Any() Then
+            Me.Form = Context.Request.Form
+        End If
 
         ' Выбираем все фрагменты на странице
         Dim innerFragments = Me.Controls.Where(Function(ctlKv) TypeOf ctlKv.Value Is Fragment).Select(Function(ctlKv) ctlKv.Value)
@@ -53,27 +66,24 @@ Public MustInherit Class Page
         Next
 
         ' Если был PostBack
-        If Context.Request.Method.ToUpper() = "POST" Then
-
-            ' Читаем форму
-            Me.Form = Await Context.Request.ReadFormAsync()
+        If Me.Form IsNot Nothing Then
 
             ' Применяем состояние формы и контролов
-            WebPagesHelper.ApplyState(Me, Options.StateProvider)
+            Me.ApplyState(Options.StateProvider)
 
             ' Применяем текущее значение полученное из формы
-            WebPagesHelper.ApplyControlFormValue(Me)
+            Me.ApplyControlFormValue()
 
             ' Сначала событие загрузки формы
             Me.OnLoad(False)
 
             ' Затем событие загрузки фрагментов
-            For Each fragm In innerFragments.Cast(Of IContainerEvents)
-                fragm.OnLoad(False)
+            For Each frm In innerFragments.Cast(Of IContainerEvents)
+                frm.OnLoad(False)
             Next
 
             ' После создаём пользовательские события
-            WebPagesHelper.GenerateControlEvents(Me)
+            Me.GenerateControlEvents()
 
         Else
             ' Первичная загрузка формы
@@ -86,9 +96,9 @@ Public MustInherit Class Page
 
         End If
 
-    End Function
+    End Sub
 
-    Public Async Function RenderAsync() As Task(Of String) Implements IPage.RenderAsync
+    Public Overridable Function RenderPage() As String Implements IPage.Render
 
         ' Вызываем событие перед генерацией контента
         Me.OnRender()
@@ -97,10 +107,10 @@ Public MustInherit Class Page
         Dim tplContent = Options.TemplateProvider.GetTemplate(Me.Id)
 
         ' Генерируем заполнитель для формы
-        WebPagesHelper.GenerateBeginEndViewForm(Me)
+        Me.GenerateBeginEndViewData()
 
         ' Генерируем заполнитель для состояния
-        WebPagesHelper.GenerateStateViewForm(Me, WebPagesHelper.GenerateState(Me, Options.StateProvider))
+        Me.GenerateStateViewData(Me.GenerateState(Options.StateProvider))
 
         ' Отрисовываем системные заполнители
         Dim lastTemplateLength = tplContent.Length
@@ -128,7 +138,7 @@ Public MustInherit Class Page
         Next
 
         ' Возвращаем контент
-        Return Await Task.FromResult(tplContent.Render())
+        Return tplContent.Render()
     End Function
 
     Public Function ToState() As StateObject Implements IState.ToState

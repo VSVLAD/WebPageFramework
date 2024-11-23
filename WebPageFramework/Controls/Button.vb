@@ -40,7 +40,7 @@ Namespace Controls
                 strBuffer.Append($" {HttpUtility.HtmlAttributeEncode(attr.Key)}=""{HttpUtility.HtmlAttributeEncode(attr.Value)}""")
             Next
 
-            If EnableEvents Then strBuffer.Append($" onclick=""doPostBack('{Id}','Click', '')""")
+            If EnableEvents Then strBuffer.Append($" onclick=""wpPostBack('{Id}','Click', '')""")
 
             strBuffer.Append(" />")
 
