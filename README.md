@@ -1,5 +1,7 @@
+[![.NET](https://github.com/VSVLAD/WebPageFramework/actions/workflows/dotnet.yml/badge.svg)](https://github.com/VSVLAD/WebPageFramework/actions/workflows/dotnet.yml)
 
-Вы можете добавлять пользовательские классы для CodeBehind таким образом:
+
+Вы можете добавлять пользовательские классы страниц аля CodeBehind таким образом:
 
 ```vbnet
 Public Class IndexPage
