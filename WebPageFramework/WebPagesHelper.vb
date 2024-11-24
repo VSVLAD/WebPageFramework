@@ -1,25 +1,50 @@
-﻿Imports System.Runtime.CompilerServices
+﻿Option Strict On
+
+Imports System.Runtime.CompilerServices
 Imports System.Web
+Imports WebPages.Controls
 
 Public Module WebPagesHelper
 
     ' Создать объект состояния
     <Extension>
     Public Function GenerateState(ThisPage As Page, StateProvider As IStateProvider) As String
-        Dim treeState As New StateObject
 
-        ' Добавляем состояние формы
-        treeState(ThisPage.Id) = ThisPage.ToState()
+        ' Создаём дерево состояния
+        Dim treeState As New StateObject()
 
-        ' Добавляем все контролы в состояние
-        For Each ctlKey In ThisPage.Controls.Keys
-            Dim state = ThisPage.Controls(ctlKey).ToState()
+        ' Добавляем собственное состояние формы в ключ $base
+        treeState("$base") = ThisPage.ToState()
 
-            If state IsNot Nothing Then
-                treeState(ctlKey) = ThisPage.Controls(ctlKey).ToState()
+        ' Выбираем все контролы формы
+        For Each parentCtl In ThisPage.Controls.Values
+
+            ' Если контрол является фрагментом, то перебираем всего дочерние контролы
+            If TypeOf parentCtl Is Fragment Then
+                Dim thisFragment = DirectCast(parentCtl, Fragment)
+
+                ' Добавляем собственное состояние фрагмента в ключ $base и под уровень фрагмента
+                treeState(parentCtl.Id) = New StateObject()
+
+                Dim treeStateThisFragment = DirectCast(treeState(parentCtl.Id), StateObject)
+                treeStateThisFragment("$base") = thisFragment.ToState()
+
+                ' Выбираем все контролы у фрагмента
+                For Each childCtl In thisFragment.Controls.Values
+
+                    ' Прикрепляем состояние контрола под уровень фрагмента
+                    Dim ctlState = childCtl.ToState()
+                    treeStateThisFragment(childCtl.Id) = ctlState
+                Next
+
+            Else
+                ' Прикрепляем состояние контрола у формы
+                Dim ctlState = parentCtl.ToState()
+                treeState(parentCtl.Id) = ctlState
             End If
         Next
 
+        ' Сериализуем в дерево
         Return StateProvider.SaveState(treeState)
     End Function
 
@@ -28,29 +53,66 @@ Public Module WebPagesHelper
     Public Sub ApplyState(ThisPage As Page, StateProvider As IStateProvider)
         Dim viewState = ThisPage.Form(Page.FieldNameViewState)
 
+        ' Если присутствует объект состояния
         If Not String.IsNullOrEmpty(viewState) Then
+
+            ' Десериализуем в дерево
             Dim treeState = StateProvider.LoadState(viewState)
 
-            ' Применяем состояние к форме
-            If treeState.ContainsKey(ThisPage.Id) Then
-                ThisPage.FromState(treeState(ThisPage.Id))
+            ' Если есть состояние формы
+            If treeState.ContainsKey("$base") Then
+
+                ' Применяем для формы
+                Dim treeStateBase = DirectCast(treeState("$base"), StateObject)
+                ThisPage.FromState(treeStateBase)
             End If
 
-            ' Перебираем все контролы и применяем состояние, если оно содержится в объекте
-            For Each ctl In ThisPage.Controls
-                If treeState.ContainsKey(ctl.Key) Then
-                    ctl.Value.FromState(treeState(ctl.Key))
+            ' Перебираем все контролы формы и если они есть в состоянии, то применяем
+            For Each parentCtl In ThisPage.Controls.Values
+
+                ' Если в состояние есть ID контрола
+                If treeState.ContainsKey(parentCtl.Id) Then
+
+                    ' Если контрол является фрагментом, то перебираем также его дочерние контролы
+                    If TypeOf parentCtl Is Fragment Then
+                        Dim thisFragment = DirectCast(parentCtl, Fragment)
+
+                        ' Ссылка для работы с элементами состояния фрагмента
+                        Dim treeStateThisFragment = DirectCast(treeState(parentCtl.Id), StateObject)
+
+                        ' Применяем собственное состояние фрагмента
+                        If treeStateThisFragment.ContainsKey("$base") Then
+                            Dim treeStateThisFragmentBase = DirectCast(treeStateThisFragment("$base"), StateObject)
+                            thisFragment.FromState(treeStateThisFragmentBase)
+                        End If
+
+                        ' Выбираем все контролы у фрагмента
+                        For Each childCtl In thisFragment.Controls.Values
+
+                            ' Применяем состояние контрола у фрагмента
+                            Dim ctlState = DirectCast(treeStateThisFragment(childCtl.Id), StateObject)
+                            childCtl.FromState(ctlState)
+                        Next
+
+                    Else
+                        ' Применяем состояние контрола у формы
+                        Dim ctlState = DirectCast(treeState(parentCtl.Id), StateObject)
+                        parentCtl.FromState(ctlState)
+                    End If
                 End If
             Next
+
         End If
     End Sub
 
     ' Применить значение из формы к элементу управления
     <Extension>
     Public Sub ApplyControlFormValue(ThisPage As Page)
-        For Each ctl In ThisPage.Controls
-            If ThisPage.Form.ContainsKey(ctl.Key) Then
-                ctl.Value.ProcessFormData(ThisPage.Form(ctl.Key))
+        For Each item In ThisPage.Form
+            Dim ctlForm = FindControl(ThisPage, item.Key)
+
+            If ctlForm IsNot Nothing Then
+                ctlForm.ProcessFormData(ThisPage.Form(item.Value))
             End If
         Next
     End Sub
@@ -58,17 +120,44 @@ Public Module WebPagesHelper
     ' Создать пользовательские событие
     <Extension>
     Public Sub GenerateControlEvents(ThisPage As Page)
+        Dim ctlEvent As IHtmlControl = Nothing
+
         Dim eventControl = ThisPage.Form(Page.FieldNameEventControl)
         Dim eventName = ThisPage.Form(Page.FieldNameEventName)
         Dim eventArgument = ThisPage.Form(Page.FieldNameEventArgument)
 
+        ' Ищем элемент управления
+        If Not String.IsNullOrEmpty(eventControl) Then
+            ctlEvent = FindControl(ThisPage, eventControl)
+        End If
+
         ' Если было событие от элемента управления и такой элемент управления существует
-        If Not String.IsNullOrEmpty(eventControl) AndAlso ThisPage.Controls.ContainsKey(eventControl) Then
-            ThisPage.Controls(eventControl).ProcessEvent(eventName, eventArgument)
+        If ctlEvent IsNot Nothing Then
+            ctlEvent.ProcessEvent(eventName, eventArgument)
         Else
             Throw New Exception($"Элемент управления ""{eventControl}"" создал событие, но он не зарегистрирован в веб-форме")
         End If
     End Sub
+
+    ''' <summary>
+    ''' Выполняет поиск элемента управления на странице, а также во всех фрагментах
+    ''' </summary>
+    <Extension>
+    Public Function FindControl(ThisPage As Page, ControlId As String) As IHtmlControl
+        Dim returnControl As IHtmlControl = Nothing
+
+        If ThisPage.Controls.TryGetValue(ControlId, returnControl) Then
+            Return returnControl
+        Else
+            For Each frm In ThisPage.Controls.Values.Where(Function(ctl) TypeOf ctl Is Fragment).Cast(Of Fragment)
+                If frm.Controls.TryGetValue(ControlId, returnControl) Then
+                    Return returnControl
+                End If
+            Next
+        End If
+
+        Return Nothing
+    End Function
 
     ' Для создания заменителей тега формы
     <Extension>

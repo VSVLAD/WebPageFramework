@@ -10,8 +10,8 @@ Namespace Controls
         Public Delegate Sub HtmlControlEventHandler(sender As HtmlControl, e As HtmlControlEventArgs)
 
         Public Sub New(Parent As IContainer, Id As String)
-            If Parent Is Nothing Then Throw New ArgumentNullException(NameOf(Parent))
-            If Id Is Nothing Then Throw New ArgumentNullException(NameOf(Id))
+            ArgumentNullException.ThrowIfNull(Parent)
+            ArgumentNullException.ThrowIfNull(Id)
 
             ' Основные свйоства
             Me.Id = Id
@@ -25,7 +25,9 @@ Namespace Controls
             Me.EnableEvents = True
 
             ' Добавляем элемент в коллекцию контролов родителя
-            Me.Parent.Controls.Add(Id, Me)
+            If Not Me.Parent.Controls.ContainsKey(Id) Then
+                Me.Parent.Controls.Add(Id, Me)
+            End If
         End Sub
 
         Public Property Id As String Implements IHtmlControl.Id
@@ -49,9 +51,9 @@ Namespace Controls
 
         Public MustOverride Function RenderScript() As String Implements IHtmlControl.RenderScript
 
-        Public MustOverride Sub ProcessEvent(EventName As String, EventArgument As String) Implements IHtmlControl.ProcessEvent
+        Public MustOverride Function ProcessEvent(EventName As String, EventArgument As String) As Boolean Implements IHtmlControl.ProcessEvent
 
-        Public MustOverride Sub ProcessFormData(Value As String) Implements IHtmlControl.ProcessFormData
+        Public MustOverride Function ProcessFormData(Value As String) As Boolean Implements IHtmlControl.ProcessFormData
 
         ''' <summary>
         ''' Восстанавливаем свойства контрола из объекта состояния

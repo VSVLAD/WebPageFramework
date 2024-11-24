@@ -54,16 +54,8 @@ Public MustInherit Class Page
             Me.Form = Context.Request.Form
         End If
 
-        ' Выбираем все фрагменты на странице
-        Dim innerFragments = Me.Controls.Where(Function(ctlKv) TypeOf ctlKv.Value Is Fragment).Select(Function(ctlKv) ctlKv.Value)
-
-        ' Иинициализация формы
+        ' Иинициализация формы и фрагментов
         Me.OnInit()
-
-        ' Инициализация фрагментов
-        For Each frag In innerFragments.Cast(Of IContainerEvents)
-            frag.OnInit()
-        Next
 
         ' Если был PostBack
         If Me.Form IsNot Nothing Then
@@ -74,25 +66,15 @@ Public MustInherit Class Page
             ' Применяем текущее значение полученное из формы
             Me.ApplyControlFormValue()
 
-            ' Сначала событие загрузки формы
+            ' Сначала событие загрузки формы и фрагментов
             Me.OnLoad(False)
-
-            ' Затем событие загрузки фрагментов
-            For Each frm In innerFragments.Cast(Of IContainerEvents)
-                frm.OnLoad(False)
-            Next
 
             ' После создаём пользовательские события
             Me.GenerateControlEvents()
 
         Else
-            ' Первичная загрузка формы
+            ' Первичная загрузка формы и фрагментов
             Me.OnLoad(True)
-
-            ' После первичная загрузка фрагментов
-            For Each frag In innerFragments.Cast(Of IContainerEvents)
-                frag.OnLoad(True)
-            Next
 
         End If
 
@@ -100,7 +82,7 @@ Public MustInherit Class Page
 
     Public Overridable Function RenderPage() As String Implements IPage.Render
 
-        ' Вызываем событие перед генерацией контента
+        ' Вызываем событие перед генерацией контента формы и фрагментов
         Me.OnRender()
 
         ' Читаем шаблон
@@ -151,14 +133,35 @@ Public MustInherit Class Page
 
     Public Overridable Sub OnInit() Implements IContainerEvents.OnInit
         RaiseEvent Init()
+
+        '  После событие инициалзиации для фрагментов
+        For Each frag In Me.Controls.Where(Function(ctlKv) TypeOf ctlKv.Value Is Fragment).
+                                     Select(Function(ctlKv) ctlKv.Value).
+                                     Cast(Of IContainerEvents)
+            frag.OnInit()
+        Next
     End Sub
 
     Public Overridable Sub OnLoad(FirstRun As Boolean) Implements IContainerEvents.OnLoad
         RaiseEvent Load(FirstRun)
+
+        ' После событие загрузки для фрагментов
+        For Each frag In Me.Controls.Where(Function(ctlKv) TypeOf ctlKv.Value Is Fragment).
+                             Select(Function(ctlKv) ctlKv.Value).
+                             Cast(Of IContainerEvents)
+            frag.OnLoad(FirstRun)
+        Next
     End Sub
 
     Public Overridable Sub OnRender() Implements IContainerEvents.OnRender
         RaiseEvent Render()
+
+        ' После событие отрисовки для фрагментов
+        For Each frag In Me.Controls.Where(Function(ctlKv) TypeOf ctlKv.Value Is Fragment).
+                             Select(Function(ctlKv) ctlKv.Value).
+                             Cast(Of IContainerEvents)
+            frag.OnRender()
+        Next
     End Sub
 
 End Class

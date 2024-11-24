@@ -23,10 +23,14 @@ Public MustInherit Class Fragment
     Public Event Render() Implements IContainerEvents.Render
 
     Public ReadOnly Property Page As IPage
+        Get
+            Return Me.Parent
+        End Get
+    End Property
 
     Protected Sub New(Parent As IContainer, Id As String)
-        ArgumentNullException.ThrowIfNull(NameOf(Parent))
-        ArgumentNullException.ThrowIfNull(NameOf(Id))
+        ArgumentNullException.ThrowIfNull(Parent, NameOf(Parent))
+        ArgumentNullException.ThrowIfNull(Id, NameOf(Id))
 
         ' Основные идентификаторы
         Me.Id = Id
@@ -34,8 +38,9 @@ Public MustInherit Class Fragment
 
         ' Добавим элемент управления в форму
         If TypeOf Parent Is IPage Then
-            Me.Page = Parent
-            Me.Page.Controls.Add(Id, Me)
+            If Not Me.Page.Controls.ContainsKey(Id) Then
+                Me.Page.Controls.Add(Id, Me)
+            End If
         Else
             Throw New NotImplementedException("Фрагмент в качестве родителя для другого фрагмента пока не поддерживается")
         End If
@@ -55,48 +60,8 @@ Public MustInherit Class Fragment
 
     Public Function RenderHtml() As String Implements IHtmlControl.RenderHtml
 
-        '' Применяем состояние формы и контролов
-        'WebPagesHelper.ApplyState(FragmentPage, FragmentPage.Options.StateProvider)
-
-        '' Применяем текущее значение полученное из формы
-        'WebPagesHelper.ApplyControlFormValue(FragmentPage)
-
-        '' Создаём пользовательские события
-        'WebPagesHelper.GenerateControlEvents(FragmentPage)
-
         ' Если скрыт, то не выполняем шаг отрисовки
         If Not Visible Then Return String.Empty
-
-        ' Инициализации фрагмента и пользовательских контролов в текущем фрагменте
-        RaiseEvent Init()
-
-        ' Если существуют фрагменты в списке контролов, вызываем рекурсивно их инициализацию
-        Dim innerFragments = Me.Controls.Where(Function(ctlKv) TypeOf ctlKv.Value Is Fragment).Select(Function(ctlKv) ctlKv.Value)
-
-        ' Инициализации внутреннего фрагмента
-        For Each fragm In innerFragments.Cast(Of IContainerEvents)
-            fragm.OnInit()
-        Next
-
-        ' Если был PostBack
-        If Page.Context.Request.Method.ToUpper() = "POST" Then
-
-            '' Применяем состояние формы и контролов
-            'WebPagesHelper.ApplyState(Me, Options.StateProvider)
-
-            '' Применяем текущее значение полученное из формы
-            'WebPagesHelper.ApplyControlFormValue(Me)
-
-            ' Сначала событие загрузки фрагмента
-            RaiseEvent Load(False)
-
-            ' Создаём пользовательские события
-            'WebPagesHelper.GenerateControlEvents(Me)
-
-        Else
-            ' Первичная загрузка формы
-            RaiseEvent Load(True)
-        End If
 
         ' Читаем шаблон фрагмента
         Dim tplContent = Page.Options.TemplateProvider.GetTemplate(Me.GetType().Name)
@@ -118,16 +83,53 @@ Public MustInherit Class Fragment
         Return String.Empty
     End Function
 
-    Public Sub ProcessEvent(EventName As String, EventArgument As String) Implements IHtmlControl.ProcessEvent
-    End Sub
+    Public Function ProcessEvent(EventName As String, EventArgument As String) As Boolean Implements IHtmlControl.ProcessEvent
+        Return False
+    End Function
 
-    Public Sub ProcessFormData(Value As String) Implements IHtmlControl.ProcessFormData
-    End Sub
+    Public Function ProcessFormData(Value As String) As Boolean Implements IHtmlControl.ProcessFormData
+        Return False
+    End Function
 
     Public Sub FromState(State As StateObject) Implements IState.FromState
+        If State.ContainsKey(NameOf(EnableState)) Then EnableState = CBool(State(NameOf(EnableState)))
+
+        If EnableState Then
+            If State.ContainsKey(NameOf(EnableEvents)) Then EnableEvents = CBool(State(NameOf(EnableEvents)))
+            If State.ContainsKey(NameOf(Visible)) Then Visible = CBool(State(NameOf(Visible)))
+            If State.ContainsKey(NameOf(Enabled)) Then Enabled = CBool(State(NameOf(Enabled)))
+            If State.ContainsKey(NameOf(CSS)) Then CSS = CStr(State(NameOf(CSS)))
+            If State.ContainsKey(NameOf(Attributes)) Then Attributes = State(NameOf(Attributes))
+
+            ' Восстанавливаем пользовательские элементы состояния
+            For Each item In State
+                Me.ViewState(item.Key) = item.Value
+            Next
+        End If
     End Sub
 
+    ' Добавляем в состояние объекты фрагмента и всех внутренних контролов
     Public Function ToState() As StateObject Implements IState.ToState
+        Dim state As New StateObject()
+
+        ' Принудительно добавляем свойство в состояние
+        state(NameOf(EnableState)) = CStr(EnableState)
+
+        If EnableState Then
+
+            ' Только те свойства, значения которых изменились от умолчания
+            If Not Visible Then state(NameOf(Visible)) = CStr(Visible)
+            If Not Enabled Then state(NameOf(Enabled)) = CStr(Enabled)
+            If Not String.IsNullOrEmpty(CSS) Then state(NameOf(CSS)) = CSS
+            If Attributes.Count > 0 Then state(NameOf(Attributes)) = Attributes
+
+            ' Добавляем пользовательские элементы состояния
+            For Each item In Me.ViewState
+                state(item.Key) = item.Value
+            Next
+        End If
+
+        Return state
     End Function
 
     Public Sub OnInit() Implements IContainerEvents.OnInit

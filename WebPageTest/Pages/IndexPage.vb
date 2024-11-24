@@ -25,13 +25,14 @@ Public Class IndexPage
             formCmb1.CSS = "form-select"
             formCmb1.Items.Clear()
 
-            For Each y In Enumerable.Range(2000, 50)
+            For Each y In Enumerable.Range(2000, 5)
                 formCmb1.Items.Add(New ComboBoxItem($"Год {y}", y))
             Next
 
             Context.Session.SetInt32("counter", 0)
 
             ' Каждые 5 секунд будем нажимать сами на зелёную кнопку
+            timer1.Enabled = False
             timer1.Interval = 5000
             timer1.SaveCounterMode = True
         End If
@@ -67,6 +68,11 @@ Public Class IndexPage
 
         If counter >= 10 Then
             timer1.SaveCounterMode = False
+        End If
+
+        ' на каждое четное нажатие показываем фрагмент
+        If fragmentAlert.Visible = False AndAlso counter Mod 2 = 0 Then
+            fragmentAlert.Visible = True
         End If
 
         Context.Session.SetInt32("counter", counter)

@@ -28,11 +28,13 @@ Namespace Controls
             Return String.Empty
         End Function
 
-        Public Overrides Sub ProcessEvent(EventName As String, EventArgument As String)
-        End Sub
+        Public Overrides Function ProcessEvent(EventName As String, EventArgument As String) As Boolean
+            Return False
+        End Function
 
-        Public Overrides Sub ProcessFormData(Value As String)
-        End Sub
+        Public Overrides Function ProcessFormData(Value As String) As Boolean
+            Return False
+        End Function
 
         Public Overrides Sub FromState(State As StateObject)
             MyBase.FromState(State)

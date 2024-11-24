@@ -19,7 +19,7 @@ Public Module WebPagesMiddlewareExtensions
     End Function
 
     <Extension>
-    Public Function MapWebPage(Of TPage As IPage)(app As IApplicationBuilder, Url As String) As IApplicationBuilder
+    Public Function MapWebPage(Of TPage As {IPage, New})(app As IApplicationBuilder, Url As String) As IApplicationBuilder
         mappedPages(Url) = GetType(TPage)
         Return app
     End Function

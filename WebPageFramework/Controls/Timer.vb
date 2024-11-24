@@ -82,15 +82,20 @@ Namespace Controls
             Return String.Empty
         End Function
 
-        Public Overrides Sub ProcessEvent(EventName As String, EventArgument As String)
+        Public Overrides Function ProcessEvent(EventName As String, EventArgument As String) As Boolean
             If EnableEvents AndAlso EventName = "Tick" Then
                 FirstCounterDate = Date.UtcNow
                 RaiseEvent Tick(Me, New HtmlControlEventArgs(EventArgument))
-            End If
-        End Sub
 
-        Public Overrides Sub ProcessFormData(Value As String)
-        End Sub
+                Return True
+            Else
+                Return False
+            End If
+        End Function
+
+        Public Overrides Function ProcessFormData(Value As String) As Boolean
+            Return False
+        End Function
 
         Public Overrides Sub FromState(State As StateObject)
             MyBase.FromState(State)
