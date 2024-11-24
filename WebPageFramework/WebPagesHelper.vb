@@ -112,7 +112,7 @@ Public Module WebPagesHelper
             Dim ctlForm = FindControl(ThisPage, item.Key)
 
             If ctlForm IsNot Nothing Then
-                ctlForm.ProcessFormData(ThisPage.Form(item.Value))
+                ctlForm.ProcessFormData(item.Value)
             End If
         Next
     End Sub
