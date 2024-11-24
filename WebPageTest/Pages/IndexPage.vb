@@ -25,7 +25,7 @@ Public Class IndexPage
             formCmb1.CSS = "form-select"
             formCmb1.Items.Clear()
 
-            For Each y In Enumerable.Range(2000, 5)
+            For Each y In Enumerable.Range(2000, 25)
                 formCmb1.Items.Add(New ComboBoxItem($"Год {y}", y))
             Next
 

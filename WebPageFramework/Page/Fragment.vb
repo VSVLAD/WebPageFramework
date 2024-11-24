@@ -22,6 +22,12 @@ Public MustInherit Class Fragment
     Public Event Load(FirstRun As Boolean) Implements IContainerEvents.Load
     Public Event Render() Implements IContainerEvents.Render
 
+    ' Список ключей, которые не могут использоваться для хранения внутри ViewState. Это свойства фрагмента как HTML контрола и они должны отдельно обрабатываться
+    Private IgnoredUserViewStateKeys As String() = {NameOf(EnableState), NameOf(EnableEvents), NameOf(Visible), NameOf(Enabled), NameOf(CSS), NameOf(Attributes)}
+
+    ''' <summary>
+    ''' Ссылка на страницу, где содержится фрагмент
+    ''' </summary>
     Public ReadOnly Property Page As IPage
         Get
             Return Me.Parent
@@ -101,8 +107,8 @@ Public MustInherit Class Fragment
             If State.ContainsKey(NameOf(CSS)) Then CSS = CStr(State(NameOf(CSS)))
             If State.ContainsKey(NameOf(Attributes)) Then Attributes = State(NameOf(Attributes))
 
-            ' Восстанавливаем пользовательские элементы состояния
-            For Each item In State
+            ' Восстанавливаем пользовательские элементы состояния, кроме свойств фрагмента
+            For Each item In State.Where(Function(kv) Not IgnoredUserViewStateKeys.Contains(kv.Key))
                 Me.ViewState(item.Key) = item.Value
             Next
         End If
@@ -123,8 +129,8 @@ Public MustInherit Class Fragment
             If Not String.IsNullOrEmpty(CSS) Then state(NameOf(CSS)) = CSS
             If Attributes.Count > 0 Then state(NameOf(Attributes)) = Attributes
 
-            ' Добавляем пользовательские элементы состояния
-            For Each item In Me.ViewState
+            ' Добавляем пользовательские элементы состояния, кроме свойств фрагмента
+            For Each item In Me.ViewState.Where(Function(kv) Not IgnoredUserViewStateKeys.Contains(kv.Key))
                 state(item.Key) = item.Value
             Next
         End If
