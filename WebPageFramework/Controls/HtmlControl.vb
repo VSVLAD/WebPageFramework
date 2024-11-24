@@ -7,6 +7,8 @@ Namespace Controls
     Public MustInherit Class HtmlControl
         Implements IHtmlControl, IState
 
+        Public Delegate Sub HtmlControlEventHandler(sender As HtmlControl, e As HtmlControlEventArgs)
+
         Public Sub New(Parent As IContainer, Id As String)
             If Parent Is Nothing Then Throw New ArgumentNullException(NameOf(Parent))
             If Id Is Nothing Then Throw New ArgumentNullException(NameOf(Id))

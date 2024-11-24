@@ -17,7 +17,7 @@ Namespace Controls
             Me.Text = String.Empty
         End Sub
 
-        Public Event Click As Action(Of HtmlControl, String)
+        Public Event Click As HtmlControlEventHandler
 
         Public Property HRef As String
 
@@ -67,7 +67,7 @@ Namespace Controls
 
         Public Overrides Sub ProcessEvent(EventName As String, EventArgument As String)
             If EnableEvents AndAlso EventName = "Click" Then
-                RaiseEvent Click(Me, EventArgument)
+                RaiseEvent Click(Me, New HtmlControlEventArgs(EventArgument))
             End If
         End Sub
 

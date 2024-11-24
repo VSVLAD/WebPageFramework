@@ -18,7 +18,7 @@ Namespace Controls
             Me.Rows = 0
         End Sub
 
-        Public Event TextChanged As Action(Of HtmlControl, String)
+        Public Event TextChanged As HtmlControlEventHandler
 
         Public Property Text As String
         Public Property MultiLine As Boolean
@@ -89,7 +89,7 @@ Namespace Controls
 
         Public Overrides Sub ProcessEvent(EventName As String, EventArgument As String)
             If EnableEvents AndAlso EventName = "TextChanged" Then
-                RaiseEvent TextChanged(Me, EventArgument)
+                RaiseEvent TextChanged(Me, New HtmlControlEventArgs(EventArgument))
             End If
         End Sub
 

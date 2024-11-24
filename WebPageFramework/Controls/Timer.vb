@@ -17,7 +17,7 @@ Namespace Controls
             Me.SaveCounterMode = False
         End Sub
 
-        Public Event Tick As Action(Of HtmlControl, String)
+        Public Event Tick As HtmlControlEventHandler
 
         ''' <summary>
         ''' Интервал срабатывания события таймера
@@ -85,7 +85,7 @@ Namespace Controls
         Public Overrides Sub ProcessEvent(EventName As String, EventArgument As String)
             If EnableEvents AndAlso EventName = "Tick" Then
                 FirstCounterDate = Date.UtcNow
-                RaiseEvent Tick(Me, EventArgument)
+                RaiseEvent Tick(Me, New HtmlControlEventArgs(EventArgument))
             End If
         End Sub
 

@@ -20,7 +20,7 @@ Namespace Controls
             Me.Items = New List(Of ComboBoxItem)
         End Sub
 
-        Public Event SelectedItemChanged As Action(Of HtmlControl, String)
+        Public Event SelectedItemChanged As HtmlControlEventHandler
 
         Public Property SelectedText As String
         Public Property SelectedValue As String
@@ -78,7 +78,7 @@ Namespace Controls
 
         Public Overrides Sub ProcessEvent(EventName As String, EventArgument As String)
             If EnableEvents AndAlso EventName = "SelectedItemChanged" Then
-                RaiseEvent SelectedItemChanged(Me, EventArgument)
+                RaiseEvent SelectedItemChanged(Me, New HtmlControlEventArgs(EventArgument))
             End If
         End Sub
 

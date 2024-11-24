@@ -41,14 +41,22 @@ Public Class IndexPage
     End Sub
 
 
-    Private Sub btn1_Click(arg1 As HtmlControl, arg2 As String) Handles formBtn1.Click
+    Private Sub formBtn1_Click(sender As HtmlControl, e As HtmlControlEventArgs) Handles formBtn1.Click
         formTxt1.Text = "Привет мир! " & Now.Ticks()
         formTxt1.CSS = "form-control bg-danger text-white"
 
         formBtn1.Text = "Меня уже нажимали =)"
     End Sub
 
-    Private Sub btn2_Click(arg1 As HtmlControl, arg2 As String) Handles formBtn2.Click
+    Private Sub timer1_Tick(sender As HtmlControl, e As HtmlControlEventArgs) Handles timer1.Tick
+        formBtn2_Click(formBtn2, Nothing)
+    End Sub
+
+    Private Sub formTxt1_TextChanged(Sender As HtmlControl, e As HtmlControlEventArgs) Handles formTxt1.TextChanged
+        ViewData("Title") = formTxt1.Text
+    End Sub
+
+    Private Sub formBtn2_Click(sender As HtmlControl, e As HtmlControlEventArgs) Handles formBtn2.Click
         formTxt1.CSS = "form-control bg-success text-black"
 
         Dim counter = Context.Session.GetInt32("counter")
@@ -62,14 +70,6 @@ Public Class IndexPage
         End If
 
         Context.Session.SetInt32("counter", counter)
-    End Sub
-
-    Private Sub txt1_TextChanged(arg1 As HtmlControl, arg2 As String) Handles formTxt1.TextChanged
-        ViewData("Title") = formTxt1.Text
-    End Sub
-
-    Private Sub timer1_Tick(arg1 As HtmlControl, arg2 As String) Handles timer1.Tick
-        btn2_Click(formBtn2, "")
     End Sub
 
 End Class
