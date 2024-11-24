@@ -17,7 +17,7 @@ Namespace Controls
             Me.Text = String.Empty
         End Sub
 
-        Public Event Click As Action(Of LinkButton, String)
+        Public Event Click As Action(Of HtmlControl, String)
 
         Public Property HRef As String
 

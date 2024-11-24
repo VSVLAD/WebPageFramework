@@ -16,7 +16,7 @@ Namespace Controls
             Me.Text = String.Empty
         End Sub
 
-        Public Event Click As Action(Of Button, String)
+        Public Event Click As Action(Of HtmlControl, String)
 
         Public Property Text As String
 

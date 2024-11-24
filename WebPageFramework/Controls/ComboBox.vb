@@ -20,7 +20,7 @@ Namespace Controls
             Me.Items = New List(Of ComboBoxItem)
         End Sub
 
-        Public Event SelectedItemChanged As Action(Of ComboBox, String)
+        Public Event SelectedItemChanged As Action(Of HtmlControl, String)
 
         Public Property SelectedText As String
         Public Property SelectedValue As String

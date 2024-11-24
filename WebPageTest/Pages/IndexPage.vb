@@ -11,6 +11,7 @@ Public Class IndexPage
     Private WithEvents formTxt1 As New TextBox(Me, NameOf(formTxt1))
     Private WithEvents formCmb1 As New ComboBox(Me, NameOf(formCmb1))
     Private WithEvents fragmentAlert As New AlertFragment(Me, NameOf(fragmentAlert))
+    Private WithEvents timer1 As New Timer(Me, NameOf(timer1))
 
     Private Sub IndexPage_Load(FirstRun As Boolean) Handles Me.Load
         If FirstRun Then
@@ -29,6 +30,10 @@ Public Class IndexPage
             Next
 
             Context.Session.SetInt32("counter", 0)
+
+            ' Каждые 5 секунд будем нажимать сами на зелёную кнопку
+            timer1.Interval = 5000
+            timer1.SaveCounterMode = True
         End If
 
         ViewData("Title") = "Заголовок страницы"
@@ -36,14 +41,14 @@ Public Class IndexPage
     End Sub
 
 
-    Private Sub btn1_Click(arg1 As Button, arg2 As String) Handles formBtn1.Click
+    Private Sub btn1_Click(arg1 As HtmlControl, arg2 As String) Handles formBtn1.Click
         formTxt1.Text = "Привет мир! " & Now.Ticks()
         formTxt1.CSS = "form-control bg-danger text-white"
 
         formBtn1.Text = "Меня уже нажимали =)"
     End Sub
 
-    Private Sub btn2_Click(arg1 As Button, arg2 As String) Handles formBtn2.Click
+    Private Sub btn2_Click(arg1 As HtmlControl, arg2 As String) Handles formBtn2.Click
         formTxt1.CSS = "form-control bg-success text-black"
 
         Dim counter = Context.Session.GetInt32("counter")
@@ -52,11 +57,19 @@ Public Class IndexPage
         counter += 1
         formBtn2.Text = $"Проверка: {counter}"
 
+        If counter >= 10 Then
+            timer1.SaveCounterMode = False
+        End If
+
         Context.Session.SetInt32("counter", counter)
     End Sub
 
-    Private Sub txt1_TextChanged(arg1 As TextBox, arg2 As String) Handles formTxt1.TextChanged
-        ViewData("Title") = arg1.Text
+    Private Sub txt1_TextChanged(arg1 As HtmlControl, arg2 As String) Handles formTxt1.TextChanged
+        ViewData("Title") = formTxt1.Text
+    End Sub
+
+    Private Sub timer1_Tick(arg1 As HtmlControl, arg2 As String) Handles timer1.Tick
+        btn2_Click(formBtn2, "")
     End Sub
 
 End Class

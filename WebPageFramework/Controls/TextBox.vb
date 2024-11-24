@@ -18,7 +18,7 @@ Namespace Controls
             Me.Rows = 0
         End Sub
 
-        Public Event TextChanged As Action(Of TextBox, String)
+        Public Event TextChanged As Action(Of HtmlControl, String)
 
         Public Property Text As String
         Public Property MultiLine As Boolean
