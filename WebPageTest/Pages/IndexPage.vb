@@ -24,6 +24,7 @@ Public Class IndexPage
             formBtn2.Text = "Счётчик"
             formTxt1.CSS = "form-control"
 
+            formCmb1.EnableEvents = False
             formCmb1.CSS = "form-select"
             formCmb1.Items.Clear()
 
@@ -34,7 +35,7 @@ Public Class IndexPage
             Context.Session.SetInt32("counter", 0)
 
             ' Каждые 5 секунд будем нажимать сами на зелёную кнопку
-            timer1.Enabled = False
+            timer1.Enabled = True
             timer1.Interval = 5000
             timer1.SaveCounterMode = True
         End If
@@ -76,6 +77,10 @@ Public Class IndexPage
         If fragmentAlert.Visible = False AndAlso counter Mod 2 = 0 Then
             fragmentAlert.Visible = True
         End If
+
+        ' Выводим год в текстовое поле
+        formTxt1.Text = $"Выбран год: {formCmb1.SelectedValue}"
+
 
         Context.Session.SetInt32("counter", CInt(counter))
     End Sub

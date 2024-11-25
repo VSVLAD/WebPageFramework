@@ -63,9 +63,9 @@ Namespace Controls
             If State.ContainsKey(NameOf(EnableState)) Then EnableState = CBool(State(NameOf(EnableState)))
 
             If EnableState Then
-                If State.ContainsKey(NameOf(EnableEvents)) Then EnableEvents = CBool(State(NameOf(EnableEvents)))
                 If State.ContainsKey(NameOf(Visible)) Then Visible = CBool(State(NameOf(Visible)))
                 If State.ContainsKey(NameOf(Enabled)) Then Enabled = CBool(State(NameOf(Enabled)))
+                If State.ContainsKey(NameOf(EnableEvents)) Then EnableEvents = CBool(State(NameOf(EnableEvents)))
                 If State.ContainsKey(NameOf(CSS)) Then CSS = CStr(State(NameOf(CSS)))
                 If State.ContainsKey(NameOf(Attributes)) Then Attributes = DirectCast(State(NameOf(Attributes)), Dictionary(Of String, String))
             End If
@@ -81,9 +81,11 @@ Namespace Controls
             state(NameOf(EnableState)) = CStr(EnableState)
 
             If EnableState Then
+
                 ' Только те свойства, значения которых изменились от умолчания
-                If Not Visible Then state(NameOf(Visible)) = CStr(Visible)
-                If Not Enabled Then state(NameOf(Enabled)) = CStr(Enabled)
+                If Not Visible Then state(NameOf(Visible)) = CBool(Visible)
+                If Not Enabled Then state(NameOf(Enabled)) = CBool(Enabled)
+                If Not EnableEvents Then state(NameOf(EnableEvents)) = CBool(EnableEvents)
                 If Not String.IsNullOrEmpty(CSS) Then state(NameOf(CSS)) = CSS
                 If Attributes.Count > 0 Then state(NameOf(Attributes)) = Attributes
             End If
