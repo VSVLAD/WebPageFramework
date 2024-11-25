@@ -51,9 +51,9 @@ Namespace Controls
 
         Public MustOverride Function RenderScript() As String Implements IHtmlControl.RenderScript
 
-        Public MustOverride Function ProcessEvent(EventName As String, EventArgument As String) As Boolean Implements IHtmlControl.ProcessEvent
+        Public MustOverride Sub ProcessControlEvent(EventName As String, EventArgument As String) Implements IHtmlControl.ProcessControlEvent
 
-        Public MustOverride Function ProcessFormData(Value As String) As Boolean Implements IHtmlControl.ProcessFormData
+        Public MustOverride Sub ProcessFormData(Value As String) Implements IHtmlControl.ProcessFormData
 
         ''' <summary>
         ''' Восстанавливаем свойства контрола из объекта состояния

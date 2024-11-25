@@ -11,9 +11,12 @@ Public MustInherit Class Fragment
     Public Property Visible As Boolean Implements IHtmlControl.Visible
     Public Property Attributes As Dictionary(Of String, String) Implements IHtmlControl.Attributes
     Public Property EnableEvents As Boolean Implements IHtmlControl.EnableEvents
+
     Public Property Parent As IContainer Implements IHtmlControl.Parent
     Public Property Id As String Implements IControl.Id
+
     Public Property EnableState As Boolean Implements IState.EnableState
+
     Public Property Controls As Dictionary(Of String, IHtmlControl) Implements IContainer.Controls
     Public Property ViewData As StateObject Implements IFragment.ViewData
     Public Property ViewState As StateObject Implements IContainer.ViewState

@@ -62,18 +62,14 @@ Namespace Controls
             Return String.Empty
         End Function
 
-        Public Overrides Function ProcessEvent(EventName As String, EventArgument As String) As Boolean
+        Public Overrides Sub ProcessControlEvent(EventName As String, EventArgument As String)
             If EnableEvents AndAlso EventName = "Click" Then
                 RaiseEvent Click(Me, New HtmlControlEventArgs(EventArgument))
-                Return True
-            Else
-                Return False
             End If
-        End Function
+        End Sub
 
-        Public Overrides Function ProcessFormData(Value As String) As Boolean
-            Return False
-        End Function
+        Public Overrides Sub ProcessFormData(Value As String)
+        End Sub
 
         Public Overrides Sub FromState(State As StateObject)
             MyBase.FromState(State)

@@ -133,7 +133,7 @@ Public Module WebPagesHelper
 
         ' Если было событие от элемента управления и такой элемент управления существует
         If ctlEvent IsNot Nothing Then
-            ctlEvent.ProcessEvent(eventName, eventArgument)
+            ctlEvent.ProcessControlEvent(eventName, eventArgument)
         Else
             Throw New Exception($"Элемент управления ""{eventControl}"" создал событие, но он не зарегистрирован в веб-форме")
         End If

@@ -47,12 +47,12 @@
         ''' Метод вызывается фреймворком и передаёт имя события и опциональное значение события
         ''' Элемент управления должен проверить и создать пользовательское событие и вернуть успех
         ''' </summary>
-        Function ProcessEvent(EventName As String, EventArgument As String) As Boolean
+        Sub ProcessControlEvent(EventName As String, EventArgument As String)
 
         ''' <summary>
         ''' Метод вызывается фреймворком и передаётся значение формы, чтобы элемент управления мог себя инициализировать этим значением. Должен вернуть успех, если выполнено
         ''' </summary>
-        Function ProcessFormData(Value As String) As Boolean
+        Sub ProcessFormData(Value As String)
 
     End Interface
 
