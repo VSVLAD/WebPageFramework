@@ -17,12 +17,13 @@ Public Class IndexPage
 
     Private Sub IndexPage_Load(FirstRun As Boolean) Handles Me.Load
         If FirstRun Then
+            formTxt1.CSS = "form-control"
+
             formBtn1.CSS = "btn btn-danger"
             formBtn1.Text = "Нажми меня!"
 
             formBtn2.CSS = "btn btn-success"
             formBtn2.Text = "Счётчик"
-            formTxt1.CSS = "form-control"
 
             formCmb1.EnableEvents = False
             formCmb1.CSS = "form-select"
@@ -31,8 +32,6 @@ Public Class IndexPage
             For Each y In Enumerable.Range(2000, 25)
                 formCmb1.Items.Add(New ComboBoxItem($"Год {y}", CStr(y)))
             Next
-
-            Context.Session.SetInt32("counter", 0)
 
             ' Каждые 5 секунд будем нажимать сами на зелёную кнопку
             timer1.Enabled = True
@@ -63,10 +62,10 @@ Public Class IndexPage
     Private Sub formBtn2_Click(sender As HtmlControl, e As HtmlControlEventArgs) Handles formBtn2.Click
         formTxt1.CSS = "form-control bg-success text-black"
 
-        Dim counter = Context.Session.GetInt32("counter")
-        If Not counter.HasValue Then counter = 0
-
+        ' Читаем
+        Dim counter = CInt(If(ViewState("counter"), 0))
         counter += 1
+
         formBtn2.Text = $"Проверка: {counter}"
 
         If counter >= 10 Then
@@ -81,8 +80,8 @@ Public Class IndexPage
         ' Выводим год в текстовое поле
         formTxt1.Text = $"Выбран год: {formCmb1.SelectedValue}"
 
-
-        Context.Session.SetInt32("counter", CInt(counter))
+        ' Запоминаем
+        ViewState("counter") = counter
     End Sub
 
 End Class
