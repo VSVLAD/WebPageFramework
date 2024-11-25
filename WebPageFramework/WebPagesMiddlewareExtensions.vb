@@ -1,4 +1,6 @@
-﻿Imports System.Runtime.CompilerServices
+﻿Option Strict On
+
+Imports System.Runtime.CompilerServices
 Imports Microsoft.AspNetCore.Builder
 
 Public Module WebPagesMiddlewareExtensions

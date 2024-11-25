@@ -1,4 +1,6 @@
-﻿Public Class WebPagesOptions
+﻿Option Strict On
+
+Public Class WebPagesOptions
 
     Public Property StateProvider As IStateProvider
 

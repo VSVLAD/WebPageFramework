@@ -1,4 +1,6 @@
-﻿Public Class StateWrongDataException
+﻿Option Strict On
+
+Public Class StateWrongDataException
     Inherits Exception
 
     Public Sub New()

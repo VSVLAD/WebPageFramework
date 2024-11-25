@@ -1,3 +1,5 @@
+Option Strict On
+
 Imports Microsoft.AspNetCore.Builder
 Imports Microsoft.Extensions.DependencyInjection
 Imports System.Text

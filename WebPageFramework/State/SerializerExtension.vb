@@ -1,4 +1,6 @@
-﻿Imports System.Runtime.CompilerServices
+﻿Option Strict On
+
+Imports System.Runtime.CompilerServices
 Imports System.Text.Encodings.Web
 Imports System.Text
 Imports System.Text.Json
@@ -71,11 +73,12 @@ Public Module SerializerExtension
 
     Private Function UnwrapObjectWithTypeInfo(typedObj As StateTypeInfo) As Object
         Dim targetType = Type.GetType(typedObj.Type)
+        Dim targetValue = DirectCast(typedObj.Value, JsonElement)
 
         If targetType Is GetType(StateObject) Then
 
             ' Десериализуем вложенный словарь и рекурсивно обрабатываем каждый элемент
-            Dim nestedDict As Dictionary(Of String, StateTypeInfo) = JsonSerializer.Deserialize(Of Dictionary(Of String, StateTypeInfo))(typedObj.Value)
+            Dim nestedDict As Dictionary(Of String, StateTypeInfo) = JsonSerializer.Deserialize(Of Dictionary(Of String, StateTypeInfo))(targetValue)
 
             Return New StateObject(nestedDict.ToDictionary(
                                                     Function(innerKvp) innerKvp.Key,
@@ -83,7 +86,7 @@ Public Module SerializerExtension
                                                 ))
         Else
             ' Десериализация обычного объекта
-            Return JsonSerializer.Deserialize(typedObj.Value, targetType)
+            Return JsonSerializer.Deserialize(targetValue, targetType)
         End If
     End Function
 

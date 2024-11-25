@@ -1,4 +1,6 @@
-﻿Imports System.IO
+﻿Option Strict On
+
+Imports System.IO
 Imports System.Text
 Imports Microsoft.AspNetCore.Hosting
 Imports Microsoft.AspNetCore.Http

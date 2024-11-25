@@ -1,4 +1,6 @@
-﻿Imports WebPages
+﻿Option Strict On
+
+Imports WebPages
 Imports WebPages.Controls
 
 Public Class AlertFragment

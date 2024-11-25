@@ -1,4 +1,6 @@
-﻿Imports WebPages.Controls
+﻿Option Strict On
+
+Imports WebPages.Controls
 
 ''' <summary>
 ''' Фрагмент позволяет подгружать пользовательские шаблоны и выполнять пользовательские классы
@@ -33,7 +35,7 @@ Public MustInherit Class Fragment
     ''' </summary>
     Public ReadOnly Property Page As IPage
         Get
-            Return Me.Parent
+            Return DirectCast(Me.Parent, IPage)
         End Get
     End Property
 
@@ -106,7 +108,7 @@ Public MustInherit Class Fragment
             If State.ContainsKey(NameOf(Visible)) Then Visible = CBool(State(NameOf(Visible)))
             If State.ContainsKey(NameOf(Enabled)) Then Enabled = CBool(State(NameOf(Enabled)))
             If State.ContainsKey(NameOf(CSS)) Then CSS = CStr(State(NameOf(CSS)))
-            If State.ContainsKey(NameOf(Attributes)) Then Attributes = State(NameOf(Attributes))
+            If State.ContainsKey(NameOf(Attributes)) Then Attributes = DirectCast(State(NameOf(Attributes)), Dictionary(Of String, String))
 
             ' Восстанавливаем пользовательские элементы состояния, кроме свойств фрагмента
             For Each item In State.Where(Function(kv) Not IgnoredUserViewStateKeys.Contains(kv.Key))

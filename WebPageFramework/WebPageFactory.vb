@@ -1,4 +1,6 @@
-﻿Imports System.Reflection
+﻿Option Strict On
+
+Imports System.Reflection
 Imports Microsoft.AspNetCore.Hosting
 Imports Microsoft.AspNetCore.Http
 

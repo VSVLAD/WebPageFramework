@@ -1,4 +1,5 @@
-﻿Imports System.Text
+﻿Option Strict On
+
 Imports System.Web
 
 Namespace Controls

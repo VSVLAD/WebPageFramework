@@ -1,4 +1,6 @@
-﻿Imports System.IO
+﻿Option Strict On
+
+Imports System.IO
 Imports System.IO.Compression
 Imports System.Security.Cryptography
 Imports System.Text
@@ -10,10 +12,10 @@ Public Class DefaultStateProvider
     Private ReadOnly secretSalt As String
 
     ' Требуется ли шифрование данных состояния представления
-    Private ReadOnly isEncrypting As String
+    Private ReadOnly isEncrypting As Boolean
 
     'Требуется ли сжатие данных состояния представления
-    Private ReadOnly isCompressing As String
+    Private ReadOnly isCompressing As Boolean
 
     Public Sub New(SecretPassword As String, SecretSalt As String, IsEncrypting As Boolean, IsCompressing As Boolean)
         Me.secretPassword = SecretPassword

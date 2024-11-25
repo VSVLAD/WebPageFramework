@@ -1,4 +1,6 @@
-﻿Imports Microsoft.AspNetCore.Http
+﻿Option Strict On
+
+Imports Microsoft.AspNetCore.Http
 Imports WebPages
 Imports WebPages.Controls
 
@@ -26,7 +28,7 @@ Public Class IndexPage
             formCmb1.Items.Clear()
 
             For Each y In Enumerable.Range(2000, 25)
-                formCmb1.Items.Add(New ComboBoxItem($"Год {y}", y))
+                formCmb1.Items.Add(New ComboBoxItem($"Год {y}", CStr(y)))
             Next
 
             Context.Session.SetInt32("counter", 0)
@@ -75,7 +77,7 @@ Public Class IndexPage
             fragmentAlert.Visible = True
         End If
 
-        Context.Session.SetInt32("counter", counter)
+        Context.Session.SetInt32("counter", CInt(counter))
     End Sub
 
 End Class

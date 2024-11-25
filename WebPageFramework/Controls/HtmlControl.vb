@@ -1,4 +1,5 @@
-﻿
+﻿Option Strict On
+
 Namespace Controls
 
     ''' <summary>
@@ -66,7 +67,7 @@ Namespace Controls
                 If State.ContainsKey(NameOf(Visible)) Then Visible = CBool(State(NameOf(Visible)))
                 If State.ContainsKey(NameOf(Enabled)) Then Enabled = CBool(State(NameOf(Enabled)))
                 If State.ContainsKey(NameOf(CSS)) Then CSS = CStr(State(NameOf(CSS)))
-                If State.ContainsKey(NameOf(Attributes)) Then Attributes = State(NameOf(Attributes))
+                If State.ContainsKey(NameOf(Attributes)) Then Attributes = DirectCast(State(NameOf(Attributes)), Dictionary(Of String, String))
             End If
         End Sub
 

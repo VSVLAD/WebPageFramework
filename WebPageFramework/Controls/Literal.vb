@@ -1,4 +1,5 @@
-﻿
+﻿Option Strict On
+
 Namespace Controls
 
     ''' <summary>
@@ -38,7 +39,7 @@ Namespace Controls
             MyBase.FromState(State)
 
             If EnableState Then
-                If State.ContainsKey(NameOf(Text)) Then Text = State(NameOf(Text))
+                If State.ContainsKey(NameOf(Text)) Then Text = CStr(State(NameOf(Text)))
             End If
         End Sub
 

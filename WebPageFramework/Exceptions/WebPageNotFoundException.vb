@@ -1,4 +1,6 @@
-﻿Public Class WebPageNotFoundException
+﻿Option Strict On
+
+Public Class WebPageNotFoundException
     Inherits Exception
 
     Public Sub New()

@@ -1,11 +1,16 @@
-﻿
-Public Class HtmlControlEventArgs
-    Inherits EventArgs
+﻿Option Strict On
 
-    Public Property EventArgument As String
+Namespace Controls
 
-    Public Sub New(EventArgument As String)
-        Me.EventArgument = EventArgument
-    End Sub
+    Public Class HtmlControlEventArgs
+        Inherits EventArgs
 
-End Class
+        Public Property EventArgument As String
+
+        Public Sub New(EventArgument As String)
+            Me.EventArgument = EventArgument
+        End Sub
+
+    End Class
+
+End Namespace

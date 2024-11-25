@@ -1,4 +1,6 @@
-﻿Imports System.Text
+﻿Option Strict On
+
+Imports System.Text
 Imports System.Web
 
 Namespace Controls
@@ -64,7 +66,7 @@ Namespace Controls
             MyBase.FromState(State)
 
             If EnableState Then
-                If State.ContainsKey(NameOf(Text)) Then Text = State(NameOf(Text))
+                If State.ContainsKey(NameOf(Text)) Then Text = CStr(State(NameOf(Text)))
             End If
         End Sub
 

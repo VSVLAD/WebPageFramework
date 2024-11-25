@@ -1,4 +1,6 @@
-﻿Imports System.Text
+﻿Option Strict On
+
+Imports System.Text
 Imports System.Web
 
 Namespace Controls
@@ -46,7 +48,7 @@ Namespace Controls
                 Next
 
                 If Rows > 0 Then
-                    strBuffer.Append($" rows=""{HttpUtility.HtmlAttributeEncode(Rows)}""")
+                    strBuffer.Append($" rows=""{HttpUtility.HtmlAttributeEncode(CStr(Rows))}""")
                 End If
 
                 If EnableEvents Then
@@ -101,9 +103,9 @@ Namespace Controls
             MyBase.FromState(State)
 
             If EnableState Then
-                If State.ContainsKey(NameOf(Text)) Then Text = State(NameOf(Text))
-                If State.ContainsKey(NameOf(MultiLine)) Then MultiLine = State(NameOf(MultiLine))
-                If State.ContainsKey(NameOf(Rows)) Then Rows = State(NameOf(Rows))
+                If State.ContainsKey(NameOf(Text)) Then Text = CStr(State(NameOf(Text)))
+                If State.ContainsKey(NameOf(MultiLine)) Then MultiLine = CBool(State(NameOf(MultiLine)))
+                If State.ContainsKey(NameOf(Rows)) Then Rows = CInt(State(NameOf(Rows)))
             End If
         End Sub
 

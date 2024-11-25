@@ -110,10 +110,7 @@ Public Module WebPagesHelper
     Public Sub ApplyControlFormValue(ThisPage As Page)
         For Each item In ThisPage.Form
             Dim ctlForm = FindControl(ThisPage, item.Key)
-
-            If ctlForm IsNot Nothing Then
-                ctlForm.ProcessFormData(item.Value)
-            End If
+            ctlForm?.ProcessFormData(item.Value)
         Next
     End Sub
 

@@ -1,4 +1,6 @@
-﻿Public Class TemplateNotFoundException
+﻿Option Strict On
+
+Public Class TemplateNotFoundException
     Inherits Exception
 
     Public Sub New()
