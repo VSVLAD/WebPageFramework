@@ -6,6 +6,9 @@
 Public MustInherit Class Fragment
     Implements IFragment
 
+    ' Список ключей, которые не могут использоваться для хранения внутри ViewState. Это свойства фрагмента как HTML контрола и они должны отдельно обрабатываться
+    Private ReadOnly IgnoredUserViewStateKeys As String() = {NameOf(EnableState), NameOf(EnableEvents), NameOf(Visible), NameOf(Enabled), NameOf(CSS), NameOf(Attributes)}
+
     Public Property CSS As String Implements IHtmlControl.CSS
     Public Property Enabled As Boolean Implements IHtmlControl.Enabled
     Public Property Visible As Boolean Implements IHtmlControl.Visible
@@ -24,9 +27,6 @@ Public MustInherit Class Fragment
     Public Event Init() Implements IContainerEvents.Init
     Public Event Load(FirstRun As Boolean) Implements IContainerEvents.Load
     Public Event Render() Implements IContainerEvents.Render
-
-    ' Список ключей, которые не могут использоваться для хранения внутри ViewState. Это свойства фрагмента как HTML контрола и они должны отдельно обрабатываться
-    Private IgnoredUserViewStateKeys As String() = {NameOf(EnableState), NameOf(EnableEvents), NameOf(Visible), NameOf(Enabled), NameOf(CSS), NameOf(Attributes)}
 
     ''' <summary>
     ''' Ссылка на страницу, где содержится фрагмент
@@ -92,13 +92,11 @@ Public MustInherit Class Fragment
         Return String.Empty
     End Function
 
-    Public Function ProcessEvent(EventName As String, EventArgument As String) As Boolean Implements IHtmlControl.ProcessEvent
-        Return False
-    End Function
+    Public Sub ProcessControlEvent(EventName As String, EventArgument As String) Implements IHtmlControl.ProcessControlEvent
+    End Sub
 
-    Public Function ProcessFormData(Value As String) As Boolean Implements IHtmlControl.ProcessFormData
-        Return False
-    End Function
+    Public Sub ProcessFormData(Value As String) Implements IHtmlControl.ProcessFormData
+    End Sub
 
     Public Sub FromState(State As StateObject) Implements IState.FromState
         If State.ContainsKey(NameOf(EnableState)) Then EnableState = CBool(State(NameOf(EnableState)))
@@ -152,5 +150,6 @@ Public MustInherit Class Fragment
     Public Sub OnRender() Implements IContainerEvents.OnRender
         RaiseEvent Render()
     End Sub
+
 
 End Class
