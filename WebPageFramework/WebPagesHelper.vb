@@ -116,7 +116,7 @@ Public Module WebPagesHelper
 
     ' Создать пользовательские событие
     <Extension>
-    Public Sub GenerateControlEvents(ThisPage As Page)
+    Public Sub GenerateControlEvent(ThisPage As Page)
         Dim ctlEvent As IHtmlControl = Nothing
 
         Dim eventControl = ThisPage.Form(Page.FieldNameEventControl)

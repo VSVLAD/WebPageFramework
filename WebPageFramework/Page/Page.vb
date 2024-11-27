@@ -1,5 +1,6 @@
 ﻿Option Strict On
 
+Imports System.Threading
 Imports Microsoft.AspNetCore.Hosting
 Imports Microsoft.AspNetCore.Http
 Imports WebPages.Controls
@@ -40,7 +41,7 @@ Public MustInherit Class Page
     ''' <summary>
     ''' Обработка формы
     ''' </summary>
-    Public Overridable Sub ProcessPage() Implements IPage.Process
+    Public Overridable Async Function ProcessAsync(tokenCancel As CancellationToken) As Task Implements IPage.ProcessAsync
 
         ' Храним данные в кеше, чтобы можно было возвращаться кнопкой назад в браузере
         ' Если используется SSL - соединение должно быть доверенное, иначе в кеш не попадёт!
@@ -49,12 +50,19 @@ Public MustInherit Class Page
         Me.Context.Response.ContentType = "text/html; charset=utf8"
         Me.Context.Response.StatusCode = 200
 
-        ' Для удобства чтения формы
-        If Context.Request.HasFormContentType AndAlso Context.Request.Form.Keys.Any() Then
-            Me.Form = Context.Request.Form
+        ' Используем свойство Form для работы с html формой
+        If Context.Request.HasFormContentType Then
+            If Not Context.Request.Form.Keys.Count > 0 Then
+                Me.Form = Await Context.Request.ReadFormAsync(tokenCancel)
+            Else
+                Me.Form = Context.Request.Form
+            End If
         End If
 
-        ' Иинициализация формы и фрагментов
+        ' Сначала проверяем, что не запросили отмену
+        tokenCancel.ThrowIfCancellationRequested()
+
+        ' Инициализация формы и фрагментов
         Me.OnInit()
 
         ' Если был PostBack
@@ -69,8 +77,8 @@ Public MustInherit Class Page
             ' Сначала событие загрузки формы и фрагментов
             Me.OnLoad(False)
 
-            ' После создаём пользовательские события
-            Me.GenerateControlEvents()
+            ' После пользовательские события контролов
+            Me.GenerateControlEvent()
 
         Else
             ' Первичная загрузка формы и фрагментов
@@ -78,9 +86,13 @@ Public MustInherit Class Page
 
         End If
 
-    End Sub
+        Await Task.CompletedTask
+    End Function
 
-    Public Overridable Function RenderPage() As String Implements IPage.Render
+    Public Overridable Async Function RenderAsync(tokenCancel As CancellationToken) As Task(Of String) Implements IPage.RenderAsync
+
+        ' Сначала проверяем, что не запросили отмену
+        tokenCancel.ThrowIfCancellationRequested()
 
         ' Вызываем событие перед генерацией контента формы и фрагментов
         Me.OnRender()
@@ -120,7 +132,7 @@ Public MustInherit Class Page
         Next
 
         ' Возвращаем контент
-        Return tplContent.Render()
+        Return Await Task.FromResult(tplContent.Render())
     End Function
 
     Public Function ToState() As StateObject Implements IState.ToState
@@ -162,6 +174,14 @@ Public MustInherit Class Page
                              Cast(Of IContainerEvents)
             frag.OnRender()
         Next
+    End Sub
+
+    ''' <summary>
+    ''' Вызвать метод Redirect, который завершает обработку страницы
+    ''' </summary>
+    Public Sub Redirect(Location As String, Optional Permanent As Boolean = False)
+        Context.Response.Redirect(Location, Permanent)
+        Throw New OperationCanceledException($"Redirect to {Location} initiated", Context.RequestAborted)
     End Sub
 
 End Class

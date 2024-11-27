@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
+    <PublishReadyToRun>true</PublishReadyToRun>
+    <PublishSingleFile>true</PublishSingleFile>
     <RootNamespace>WebApp</RootNamespace>
     <TargetFramework>net8.0</TargetFramework>
   </PropertyGroup>
@@ -17,6 +19,15 @@
 
   <ItemGroup>
     <ProjectReference Include="..\WebPageFramework\WebPageFramework.vbproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="private.pem">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="public.pem">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

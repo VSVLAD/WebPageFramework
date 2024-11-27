@@ -1,4 +1,5 @@
-﻿Imports Microsoft.AspNetCore.Hosting
+﻿Imports System.Threading
+Imports Microsoft.AspNetCore.Hosting
 Imports Microsoft.AspNetCore.Http
 Imports WebPages.Controls
 
@@ -28,11 +29,11 @@ Public Interface IPage
     ''' <summary>
     ''' Фреймворк вызывает, чтобы страница загрузила состояние, обработала данные формы, сохранила состояние
     ''' </summary>
-    Sub Process()
+    Function ProcessAsync(tokenCancel As CancellationToken) As Task
 
     ''' <summary>
     ''' Фреймворк вызывает, чтобы отрисовать контент
     ''' </summary>
-    Function Render() As String
+    Function RenderAsync(tokenCancel As CancellationToken) As Task(Of String)
 
 End Interface

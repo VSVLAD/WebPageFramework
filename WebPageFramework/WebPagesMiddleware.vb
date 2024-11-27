@@ -21,25 +21,31 @@ Public Class WebPagesMiddleware
     End Sub
 
     Public Async Function InvokeAsync(context As HttpContext) As Task
-        Dim pageType As Type = Nothing
+        Try
+            Dim pageType As Type = Nothing
 
-        ' Выполняется запрашиваемый адрес ассоциирован с формой, то выполняем обработку
-        If options.MappedPages.TryGetValue(context.Request.Path, pageType) Then
+            ' Выполняется запрашиваемый адрес ассоциирован с формой, то выполняем обработку
+            If options.MappedPages.TryGetValue(context.Request.Path, pageType) Then
 
-            ' Создаем экземпляр формы
-            Dim pageInstance = WebPageFactory.Create(pageType, context, env, options)
+                ' Создаем экземпляр формы
+                Dim pageInstance = WebPageFactory.Create(pageType, context, env, options)
 
-            ' Выполняем обработку формы 
-            pageInstance.Process()
+                ' Выполняем обработку формы 
+                Await pageInstance.ProcessAsync(context.RequestAborted)
 
-            ' Выполняем отрисовку формы, заменяем плейсхолдеры {{ item }} в шаблоне
-            Dim content = pageInstance.Render()
+                ' Выполняем отрисовку формы, заменяем плейсхолдеры {{ item }} в шаблоне
+                Dim content = Await pageInstance.RenderAsync(context.RequestAborted)
 
-            ' Возвращаем контент
-            Await context.Response.WriteAsync(content, Encoding.UTF8)
-        Else
-            Await nextDelegate(context)
-        End If
+                ' Возвращаем контент
+                Await context.Response.WriteAsync(content, Encoding.UTF8)
+            Else
+                Await nextDelegate(context)
+            End If
+
+        Catch ex As OperationCanceledException
+            Console.WriteLine($"{context.Request.Path} is canceled by user")
+
+        End Try
     End Function
 
 End Class
