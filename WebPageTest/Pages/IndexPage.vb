@@ -2,12 +2,13 @@
 
 Imports WebPages
 Imports WebPages.Controls
+Imports WebPages.Bootstrap5.Controls
 
 Public Class IndexPage
     Inherits Page
 
     ' Создаём контролы
-    Private WithEvents formBtn1 As New Button(Me, NameOf(formBtn1))
+    Private WithEvents formBtnBs1 As New Button(Me, NameOf(formBtnBs1))
     Private WithEvents formBtn2 As New Button(Me, NameOf(formBtn2))
     Private WithEvents formTxt1 As New TextBox(Me, NameOf(formTxt1))
     Private WithEvents formCmb1 As New ComboBox(Me, NameOf(formCmb1))
@@ -17,9 +18,8 @@ Public Class IndexPage
     Private Sub IndexPage_Load(FirstRun As Boolean) Handles Me.Load
         If FirstRun Then
             formTxt1.CSS = "form-control"
-
-            formBtn1.CSS = "btn btn-danger"
-            formBtn1.Text = "Нажми меня!"
+            formBtnBs1.Text = "Нажми меня!"
+            formBtnBs1.CSS = "btn btn-danger"
 
             formBtn2.CSS = "btn btn-success"
             formBtn2.Text = "Счётчик"
@@ -43,11 +43,11 @@ Public Class IndexPage
     End Sub
 
 
-    Private Sub formBtn1_Click(sender As HtmlControl, e As HtmlControlEventArgs) Handles formBtn1.Click
+    Private Sub formBtn1_Click(sender As HtmlControl, e As HtmlControlEventArgs) Handles formBtnBs1.Click
         formTxt1.Text = "Привет мир! " & Now.Ticks()
         formTxt1.CSS = "form-control bg-danger text-white"
 
-        formBtn1.Text = "Меня уже нажимали =)"
+        formBtnBs1.Text = "Меня уже нажимали =)"
     End Sub
 
     Private Sub timer1_Tick(sender As HtmlControl, e As HtmlControlEventArgs) Handles timer1.Tick

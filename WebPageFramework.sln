@@ -3,14 +3,16 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "WebPageFramework", "WebPageFramework\WebPageFramework.vbproj", "{408625CD-068C-4A70-BD0C-88DED39E97C6}"
+Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "WebPages.Core", "WebPageFramework\WebPages.Core.vbproj", "{408625CD-068C-4A70-BD0C-88DED39E97C6}"
 EndProject
-Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "WebPageTest", "WebPageTest\WebPageTest.vbproj", "{2C54072A-E1EB-4A1F-B415-A0A73EC01086}"
+Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "WebPagesTest", "WebPageTest\WebPagesTest.vbproj", "{2C54072A-E1EB-4A1F-B415-A0A73EC01086}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3B51B3C1-4FD9-4F67-962B-A4EE2B0F3CB6}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 	EndProjectSection
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "WebPages.Bootstrap5.Controls", "WebPage.UI.Bootstrap5\WebPages.Bootstrap5.Controls.vbproj", "{AD6B8F03-E8BE-41E1-AEF6-E5ED64174F37}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,6 +28,10 @@ Global
 		{2C54072A-E1EB-4A1F-B415-A0A73EC01086}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2C54072A-E1EB-4A1F-B415-A0A73EC01086}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2C54072A-E1EB-4A1F-B415-A0A73EC01086}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD6B8F03-E8BE-41E1-AEF6-E5ED64174F37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD6B8F03-E8BE-41E1-AEF6-E5ED64174F37}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD6B8F03-E8BE-41E1-AEF6-E5ED64174F37}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD6B8F03-E8BE-41E1-AEF6-E5ED64174F37}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

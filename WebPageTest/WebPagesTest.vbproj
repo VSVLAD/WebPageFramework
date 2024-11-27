@@ -18,7 +18,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WebPageFramework\WebPageFramework.vbproj" />
+    <ProjectReference Include="..\WebPage.UI.Bootstrap5\WebPages.Bootstrap5.Controls.vbproj" />
+    <ProjectReference Include="..\WebPageFramework\WebPages.Core.vbproj" />
   </ItemGroup>
 
   <ItemGroup>
