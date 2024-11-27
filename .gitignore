@@ -396,3 +396,6 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+/WebPageTest/public.pem
+/WebPageTest/private.pem
+/WebPageTest/appsettings.json
