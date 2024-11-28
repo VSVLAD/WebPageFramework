@@ -31,6 +31,16 @@ Public Class StateObject
         innerDict.Add(key, value)
     End Sub
 
+    ' Метод для удаления элемента
+    Public Sub Remove(key As String)
+        innerDict.Remove(key)
+    End Sub
+
+    ' Метод для удаления всех элементов
+    Public Sub Clear()
+        innerDict.Clear()
+    End Sub
+
     ' Метод для проверки наличия ключа
     Public Function ContainsKey(key As String) As Boolean
         Return innerDict.ContainsKey(key)
