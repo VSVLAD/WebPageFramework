@@ -11,7 +11,7 @@ Public Module WebPagesHelper
     Public Function GenerateState(ThisPage As Page, StateProvider As IStateProvider) As String
 
         ' Создаём дерево состояния
-        Dim treeState As New StateObject()
+        Dim treeState As New ViewObject()
 
         ' Добавляем собственное состояние формы в ключ $base
         treeState("$base") = ThisPage.ToState()
@@ -24,9 +24,9 @@ Public Module WebPagesHelper
                 Dim thisFragment = DirectCast(parentCtl, Fragment)
 
                 ' Добавляем собственное состояние фрагмента в ключ $base и под уровень фрагмента
-                treeState(parentCtl.Id) = New StateObject()
+                treeState(parentCtl.Id) = New ViewObject()
 
-                Dim treeStateThisFragment = DirectCast(treeState(parentCtl.Id), StateObject)
+                Dim treeStateThisFragment = DirectCast(treeState(parentCtl.Id), ViewObject)
                 treeStateThisFragment("$base") = thisFragment.ToState()
 
                 ' Выбираем все контролы у фрагмента
@@ -63,7 +63,7 @@ Public Module WebPagesHelper
             If treeState.ContainsKey("$base") Then
 
                 ' Применяем для формы
-                Dim treeStateBase = DirectCast(treeState("$base"), StateObject)
+                Dim treeStateBase = DirectCast(treeState("$base"), ViewObject)
                 ThisPage.FromState(treeStateBase)
             End If
 
@@ -78,11 +78,11 @@ Public Module WebPagesHelper
                         Dim thisFragment = DirectCast(parentCtl, Fragment)
 
                         ' Ссылка для работы с элементами состояния фрагмента
-                        Dim treeStateThisFragment = DirectCast(treeState(parentCtl.Id), StateObject)
+                        Dim treeStateThisFragment = DirectCast(treeState(parentCtl.Id), ViewObject)
 
                         ' Применяем собственное состояние фрагмента
                         If treeStateThisFragment.ContainsKey("$base") Then
-                            Dim treeStateThisFragmentBase = DirectCast(treeStateThisFragment("$base"), StateObject)
+                            Dim treeStateThisFragmentBase = DirectCast(treeStateThisFragment("$base"), ViewObject)
                             thisFragment.FromState(treeStateThisFragmentBase)
                         End If
 
@@ -90,13 +90,13 @@ Public Module WebPagesHelper
                         For Each childCtl In thisFragment.Controls.Values
 
                             ' Применяем состояние контрола у фрагмента
-                            Dim ctlState = DirectCast(treeStateThisFragment(childCtl.Id), StateObject)
+                            Dim ctlState = DirectCast(treeStateThisFragment(childCtl.Id), ViewObject)
                             childCtl.FromState(ctlState)
                         Next
 
                     Else
                         ' Применяем состояние контрола у формы
-                        Dim ctlState = DirectCast(treeState(parentCtl.Id), StateObject)
+                        Dim ctlState = DirectCast(treeState(parentCtl.Id), ViewObject)
                         parentCtl.FromState(ctlState)
                     End If
                 End If

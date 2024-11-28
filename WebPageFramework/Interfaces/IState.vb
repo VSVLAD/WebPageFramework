@@ -8,11 +8,11 @@
     ''' <summary>
     ''' Метод вызывается фреймворком и передаёт объект состояние для инициализации
     ''' </summary>
-    Sub FromState(State As StateObject)
+    Sub FromState(State As ViewObject)
 
     ''' <summary>
     ''' Метод вызывается фреймворком, чтобы получить текущее состояние для сериализации
     ''' </summary>
-    Function ToState() As StateObject
+    Function ToState() As ViewObject
 
 End Interface

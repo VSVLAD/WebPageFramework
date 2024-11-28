@@ -93,7 +93,7 @@ Namespace Controls
         Public Overrides Sub ProcessFormData(Value As String)
         End Sub
 
-        Public Overrides Sub FromState(State As StateObject)
+        Public Overrides Sub FromState(State As ViewObject)
             MyBase.FromState(State)
 
             If State.ContainsKey(NameOf(EnableEvents)) Then EnableEvents = CBool(State(NameOf(EnableEvents)))
@@ -104,7 +104,7 @@ Namespace Controls
             End If
         End Sub
 
-        Public Overrides Function ToState() As StateObject
+        Public Overrides Function ToState() As ViewObject
             Dim state = MyBase.ToState()
 
             If Not EnableEvents Then state(NameOf(EnableEvents)) = EnableEvents

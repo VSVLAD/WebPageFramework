@@ -49,7 +49,7 @@ Public Class ButtonBS
         Return strBuffer.ToString()
     End Function
 
-    Public Overrides Sub FromState(State As StateObject)
+    Public Overrides Sub FromState(State As ViewObject)
         If State.ContainsKey(NameOf(EnableState)) Then EnableState = CBool(State(NameOf(EnableState)))
 
         If EnableState Then
@@ -63,8 +63,8 @@ Public Class ButtonBS
         End If
     End Sub
 
-    Public Overrides Function ToState() As StateObject
-        Dim state As New StateObject()
+    Public Overrides Function ToState() As ViewObject
+        Dim state As New ViewObject()
 
         ' ѕринудительно добавл€ем свойство в состо€ние
         state(NameOf(EnableState)) = CStr(EnableState)

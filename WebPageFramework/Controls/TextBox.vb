@@ -99,7 +99,7 @@ Namespace Controls
             Me.Text = Value
         End Sub
 
-        Public Overrides Sub FromState(State As StateObject)
+        Public Overrides Sub FromState(State As ViewObject)
             MyBase.FromState(State)
 
             If EnableState Then
@@ -109,7 +109,7 @@ Namespace Controls
             End If
         End Sub
 
-        Public Overrides Function ToState() As StateObject
+        Public Overrides Function ToState() As ViewObject
             Dim state = MyBase.ToState()
 
             If EnableState Then

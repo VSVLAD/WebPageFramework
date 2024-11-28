@@ -59,7 +59,7 @@ Namespace Controls
         ''' <summary>
         ''' Восстанавливаем свойства контрола из объекта состояния
         ''' </summary>
-        Public Overridable Sub FromState(State As StateObject) Implements IState.FromState
+        Public Overridable Sub FromState(State As ViewObject) Implements IState.FromState
             If State.ContainsKey(NameOf(EnableState)) Then EnableState = CBool(State(NameOf(EnableState)))
 
             If EnableState Then
@@ -74,8 +74,8 @@ Namespace Controls
         ''' <summary>
         ''' Сохраняем свойства контрола в объект состояния
         ''' </summary>
-        Public Overridable Function ToState() As StateObject Implements IState.ToState
-            Dim state As New StateObject()
+        Public Overridable Function ToState() As ViewObject Implements IState.ToState
+            Dim state As New ViewObject()
 
             ' Принудительно добавляем свойство в состояние
             state(NameOf(EnableState)) = CStr(EnableState)

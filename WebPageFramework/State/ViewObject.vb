@@ -1,6 +1,6 @@
 ﻿Option Strict On
 
-Public Class StateObject
+Public Class ViewObject
     Implements IEnumerable(Of KeyValuePair(Of String, Object))
 
     Private ReadOnly innerDict As Dictionary(Of String, Object)

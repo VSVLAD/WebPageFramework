@@ -21,8 +21,8 @@ Public MustInherit Class Page
     Public Property Form As IFormCollection Implements IPage.Form
     Public Property Id As String Implements IControl.Id
     Public Property Controls As Dictionary(Of String, IHtmlControl) Implements IContainer.Controls
-    Public Property ViewState As StateObject Implements IContainer.ViewState
-    Public Property ViewData As StateObject Implements IViewData.ViewData
+    Public Property ViewState As ViewObject Implements IContainer.ViewState
+    Public Property ViewData As ViewObject Implements IViewData.ViewData
     Public Property EnableState As Boolean Implements IState.EnableState
 
     Public Event Init() Implements IContainerEvents.Init
@@ -33,8 +33,8 @@ Public MustInherit Class Page
 
         ' Значения по-умолчанию
         Me.Controls = New Dictionary(Of String, IHtmlControl)
-        Me.ViewData = New StateObject()
-        Me.ViewState = New StateObject()
+        Me.ViewData = New ViewObject()
+        Me.ViewState = New ViewObject()
         Me.EnableState = True
     End Sub
 
@@ -135,11 +135,11 @@ Public MustInherit Class Page
         Return Await Task.FromResult(tplContent.Render())
     End Function
 
-    Public Function ToState() As StateObject Implements IState.ToState
+    Public Function ToState() As ViewObject Implements IState.ToState
         Return ViewState
     End Function
 
-    Public Sub FromState(State As StateObject) Implements IState.FromState
+    Public Sub FromState(State As ViewObject) Implements IState.FromState
         ViewState = State
     End Sub
 
