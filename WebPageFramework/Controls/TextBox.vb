@@ -85,10 +85,6 @@ Namespace Controls
             Return strBuffer.ToString()
         End Function
 
-        Public Overrides Function RenderScript() As String
-            Return String.Empty
-        End Function
-
         Public Overrides Sub ProcessControlEvent(EventName As String, EventArgument As String)
             If EnableEvents AndAlso EventName = "TextChanged" Then
                 RaiseEvent TextChanged(Me, New HtmlControlEventArgs(EventArgument))

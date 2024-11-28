@@ -35,7 +35,7 @@ Public Class IndexPage
             ' Каждые 5 секунд будем нажимать сами на зелёную кнопку
             timer1.Enabled = False
             timer1.Interval = 5000
-            timer1.SaveCounterMode = True
+            timer1.ResetCounter = True
         End If
 
         ViewData("Title") = "Заголовок страницы"
@@ -68,7 +68,7 @@ Public Class IndexPage
         formBtn2.Text = $"Проверка: {counter}"
 
         If counter >= 10 Then
-            timer1.SaveCounterMode = False
+            timer1.ResetCounter = False
         End If
 
         ' на каждое четное нажатие показываем фрагмент

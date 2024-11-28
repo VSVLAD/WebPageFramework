@@ -25,16 +25,6 @@ Namespace Controls
             Return Text
         End Function
 
-        Public Overrides Function RenderScript() As String
-            Return String.Empty
-        End Function
-
-        Public Overrides Sub ProcessControlEvent(EventName As String, EventArgument As String)
-        End Sub
-
-        Public Overrides Sub ProcessFormData(Value As String)
-        End Sub
-
         Public Overrides Sub FromState(State As ViewObject)
             MyBase.FromState(State)
 

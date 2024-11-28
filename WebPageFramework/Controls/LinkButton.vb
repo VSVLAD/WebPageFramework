@@ -60,17 +60,10 @@ Namespace Controls
             Return strBuffer.ToString()
         End Function
 
-        Public Overrides Function RenderScript() As String
-            Return String.Empty
-        End Function
-
         Public Overrides Sub ProcessControlEvent(EventName As String, EventArgument As String)
             If EnableEvents AndAlso EventName = "Click" Then
                 RaiseEvent Click(Me, New HtmlControlEventArgs(EventArgument))
             End If
-        End Sub
-
-        Public Overrides Sub ProcessFormData(Value As String)
         End Sub
 
         Public Overrides Sub FromState(State As ViewObject)

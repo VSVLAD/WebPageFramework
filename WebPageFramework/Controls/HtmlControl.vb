@@ -48,13 +48,19 @@ Namespace Controls
         Public Property EnableState As Boolean Implements IState.EnableState
 
 
-        Public MustOverride Function RenderHtml() As String Implements IHtmlControl.RenderHtml
+        Public Overridable Function RenderHtml() As String Implements IHtmlControl.RenderHtml
+            Return String.Empty
+        End Function
 
-        Public MustOverride Function RenderScript() As String Implements IHtmlControl.RenderScript
+        Public Overridable Function RenderScript() As String Implements IHtmlControl.RenderScript
+            Return String.Empty
+        End Function
 
-        Public MustOverride Sub ProcessControlEvent(EventName As String, EventArgument As String) Implements IHtmlControl.ProcessControlEvent
+        Public Overridable Sub ProcessControlEvent(EventName As String, EventArgument As String) Implements IHtmlControl.ProcessControlEvent
+        End Sub
 
-        Public MustOverride Sub ProcessFormData(Value As String) Implements IHtmlControl.ProcessFormData
+        Public Overridable Sub ProcessFormData(Value As String) Implements IHtmlControl.ProcessFormData
+        End Sub
 
         ''' <summary>
         ''' Восстанавливаем свойства контрола из объекта состояния
