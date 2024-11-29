@@ -2,7 +2,6 @@
 
 Imports WebPages
 Imports WebPages.Controls
-Imports WebPages.Bootstrap5.Controls
 
 Public Class IndexPage
     Inherits Page

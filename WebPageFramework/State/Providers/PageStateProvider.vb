@@ -1,6 +1,6 @@
 ﻿Option Strict On
 
-Friend Class PageStateProvider
+Public Class PageStateProvider
     Implements IStateProvider
 
     Private Const FieldNameViewState = "wpViewState"

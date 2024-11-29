@@ -50,7 +50,7 @@ Public Module WebPagesHelper
 
     ' Загружаем объект состояния и применяем к элементам управления
     <Extension>
-    Public Sub PageStateLoad(ThisPage As Page, StateProvider As IStateProvider, StateFormatter As IStateFormatter)
+    Public Function PageStateLoad(ThisPage As Page, StateProvider As IStateProvider, StateFormatter As IStateFormatter) As Boolean
 
         ' Читаем запакованное состояние из хранилища
         Dim packedTreeState = StateProvider.FromStorage(ThisPage)
@@ -103,8 +103,11 @@ Public Module WebPagesHelper
                 End If
             Next
 
+            Return True
         End If
-    End Sub
+
+        Return False
+    End Function
 
     ' Применить значение из формы к элементу управления
     <Extension>

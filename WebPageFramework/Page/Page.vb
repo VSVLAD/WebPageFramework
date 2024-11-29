@@ -61,7 +61,7 @@ Public MustInherit Class Page
         Me.OnInit()
 
         ' Загружаем состояние
-        Me.PageStateLoad(Options.StateProvider, Options.StateFormatter)
+        Dim pageStateAvailable = Me.PageStateLoad(Options.StateProvider, Options.StateFormatter)
 
         ' Если был PostBack
         If Me.Form IsNot Nothing Then
@@ -76,9 +76,12 @@ Public MustInherit Class Page
             Me.GenerateControlEvent()
 
         Else
-            ' Первичная загрузка формы и фрагментов
-            Me.OnLoad(True)
-
+            ' Если не было PostBack, но состояние загружено
+            If pageStateAvailable Then
+                Me.OnLoad(False) ' Повторная загрузка
+            Else
+                Me.OnLoad(True) ' Начальная загрузка
+            End If
         End If
 
         ' Сохраняем состояние
