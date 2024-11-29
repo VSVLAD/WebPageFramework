@@ -5,8 +5,8 @@ Imports System.IO.Compression
 Imports System.Security.Cryptography
 Imports System.Text
 
-Public Class DefaultStateProvider
-    Implements IStateProvider
+Public Class DefaultStateFormatter
+    Implements IStateFormatter
 
     Private ReadOnly secretPassword As String
     Private ReadOnly secretSalt As String
@@ -27,7 +27,7 @@ Public Class DefaultStateProvider
     ''' <summary>
     ''' Сохранить состояние в сериализованное представление
     ''' </summary>
-    Public Function SaveState(State As ViewObject) As String Implements IStateProvider.SaveState
+    Public Function SerializeState(State As ViewObject) As String Implements IStateFormatter.SerializeState
         Try
             ' Сериализуем
             Dim bytesState() As Byte = Encoding.UTF8.GetBytes(State.SerializeWithTypeInfo())
@@ -52,7 +52,7 @@ Public Class DefaultStateProvider
     End Function
 
     ''' Восстановить состояние из сериализованного представления
-    Public Function LoadState(PackedState As String) As ViewObject Implements IStateProvider.LoadState
+    Public Function DeserializeState(PackedState As String) As ViewObject Implements IStateFormatter.DeserializeState
         Try
             ' Распаковываем
             Dim bytesState() As Byte = Convert.FromBase64String(PackedState)

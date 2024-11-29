@@ -2,6 +2,8 @@
 
 Public Class WebPagesOptions
 
+    Public Property StateFormatter As IStateFormatter
+
     Public Property StateProvider As IStateProvider
 
     Public Property TemplateProvider As ITemplateProvider

@@ -6,13 +6,12 @@ Imports Microsoft.AspNetCore.Http
 Imports WebPages.Controls
 
 Public MustInherit Class Page
-    Implements IPage, IState, IContainerEvents
+    Implements IPage, IStateObject, IContainerEvents
 
     ' Название полей для внутренней инфраструктуры состояния и событий
     Public Const FieldNameEventControl = "wpEventControl"
     Public Const FieldNameEventName = "wpEventName"
     Public Const FieldNameEventArgument = "wpEventArgument"
-    Public Const FieldNameViewState = "wpViewState"
     Public Const FunctionNamePostBack = "wpPostBack"
 
     Public Property Context As HttpContext Implements IPage.Context
@@ -23,7 +22,7 @@ Public MustInherit Class Page
     Public Property Controls As Dictionary(Of String, IHtmlControl) Implements IContainer.Controls
     Public Property ViewState As ViewObject Implements IContainer.ViewState
     Public Property ViewData As ViewObject Implements IViewData.ViewData
-    Public Property EnableState As Boolean Implements IState.EnableState
+    Public Property EnableState As Boolean Implements IStateObject.EnableState
 
     Public Event Init() Implements IContainerEvents.Init
     Public Event Load(FirstRun As Boolean) Implements IContainerEvents.Load
@@ -50,26 +49,22 @@ Public MustInherit Class Page
         Me.Context.Response.ContentType = "text/html; charset=utf8"
         Me.Context.Response.StatusCode = 200
 
-        ' Используем свойство Form для работы с html формой
+        ' Проверяем, пришла ли форма и запишем ссылку в свойство Form
         If Context.Request.HasFormContentType Then
-            If Not Context.Request.Form.Keys.Count > 0 Then
-                Me.Form = Await Context.Request.ReadFormAsync(tokenCancel)
-            Else
-                Me.Form = Context.Request.Form
-            End If
+            Me.Form = Await Context.Request.ReadFormAsync(tokenCancel)
         End If
 
-        ' Сначала проверяем, что не запросили отмену
+        ' Проверяем, что не запросили отмену
         tokenCancel.ThrowIfCancellationRequested()
 
         ' Инициализация формы и фрагментов
         Me.OnInit()
 
+        ' Загружаем состояние
+        Me.PageStateLoad(Options.StateProvider, Options.StateFormatter)
+
         ' Если был PostBack
         If Me.Form IsNot Nothing Then
-
-            ' Применяем состояние формы и контролов
-            Me.ApplyState(Options.StateProvider)
 
             ' Применяем текущее значение полученное из формы
             Me.ApplyControlFormValue()
@@ -85,6 +80,9 @@ Public MustInherit Class Page
             Me.OnLoad(True)
 
         End If
+
+        ' Сохраняем состояние
+        Me.PageStateSave(Options.StateProvider, Options.StateFormatter)
 
         Await Task.CompletedTask
     End Function
@@ -103,12 +101,9 @@ Public MustInherit Class Page
         ' Генерируем заполнитель для формы
         Me.GenerateBeginEndViewData()
 
-        ' Генерируем заполнитель для состояния
-        Me.GenerateStateViewData(Me.GenerateState(Options.StateProvider))
-
         ' Отрисовываем системные заполнители
         Dim lastTemplateLength = tplContent.Length
-        tplContent.Replace("<form>", $"{ViewData("__formBegin")}{ViewData("__formViewState")}")
+        tplContent.Replace("<form>", $"{ViewData("__formBegin")}{ViewData("__formState")}")
 
         If lastTemplateLength = tplContent.Length Then
             Throw New Exception($"Шаблон страницы ""{Id}"" должен содержать начальный тег <form> без атрибутов")
@@ -134,14 +129,6 @@ Public MustInherit Class Page
         ' Возвращаем контент
         Return Await Task.FromResult(tplContent.Render())
     End Function
-
-    Public Function ToState() As ViewObject Implements IState.ToState
-        Return ViewState
-    End Function
-
-    Public Sub FromState(State As ViewObject) Implements IState.FromState
-        ViewState = State
-    End Sub
 
     Public Overridable Sub OnInit() Implements IContainerEvents.OnInit
         RaiseEvent Init()
@@ -174,6 +161,14 @@ Public MustInherit Class Page
                              Cast(Of IContainerEvents)
             frag.OnRender()
         Next
+    End Sub
+
+    Public Function ToState() As ViewObject Implements IStateObject.ToState
+        Return ViewState
+    End Function
+
+    Public Sub FromState(State As ViewObject) Implements IStateObject.FromState
+        ViewState = State
     End Sub
 
     ''' <summary>

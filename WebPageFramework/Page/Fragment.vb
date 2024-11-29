@@ -20,7 +20,7 @@ Public MustInherit Class Fragment
     Public Property Parent As IContainer Implements IHtmlControl.Parent
     Public Property Id As String Implements IControl.Id
 
-    Public Property EnableState As Boolean Implements IState.EnableState
+    Public Property EnableState As Boolean Implements IStateObject.EnableState
 
     Public Property Controls As Dictionary(Of String, IHtmlControl) Implements IContainer.Controls
     Public Property ViewData As ViewObject Implements IFragment.ViewData
@@ -100,7 +100,7 @@ Public MustInherit Class Fragment
     Public Sub ProcessFormData(Value As String) Implements IHtmlControl.ProcessFormData
     End Sub
 
-    Public Sub FromState(State As ViewObject) Implements IState.FromState
+    Public Sub FromState(State As ViewObject) Implements IStateObject.FromState
         If State.ContainsKey(NameOf(EnableState)) Then EnableState = CBool(State(NameOf(EnableState)))
 
         If EnableState Then
@@ -118,7 +118,7 @@ Public MustInherit Class Fragment
     End Sub
 
     ' Добавляем в состояние объекты фрагмента и всех внутренних контролов
-    Public Function ToState() As ViewObject Implements IState.ToState
+    Public Function ToState() As ViewObject Implements IStateObject.ToState
         Dim state As New ViewObject()
 
         ' Принудительно добавляем свойство в состояние

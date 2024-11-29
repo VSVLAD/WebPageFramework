@@ -15,7 +15,8 @@ Public Class WebPagesMiddleware
         Me.nextDelegate = nextDelegate
         Me.env = env
         Me.options = If(options, New WebPagesOptions())
-        Me.options.StateProvider = If(Me.options.StateProvider, New DefaultStateProvider("Default", "Default", True, True))
+        Me.options.StateFormatter = If(Me.options.StateFormatter, New DefaultStateFormatter("Default", "Default", True, True))
+        Me.options.StateProvider = If(Me.options.StateProvider, New PageStateProvider())
         Me.options.TemplateProvider = If(Me.options.TemplateProvider, New DefaultTemplateProvider(env.WebRootPath))
         Me.options.MappedPages = If(Me.options.MappedPages, New Dictionary(Of String, Type))
     End Sub

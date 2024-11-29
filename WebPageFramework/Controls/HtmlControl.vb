@@ -6,7 +6,7 @@ Namespace Controls
     ''' Обычная кнопка
     ''' </summary>
     Public MustInherit Class HtmlControl
-        Implements IHtmlControl, IState
+        Implements IHtmlControl, IStateObject
 
         Public Delegate Sub HtmlControlEventHandler(sender As HtmlControl, e As HtmlControlEventArgs)
 
@@ -45,7 +45,7 @@ Namespace Controls
 
         Public Property EnableEvents As Boolean Implements IHtmlControl.EnableEvents
 
-        Public Property EnableState As Boolean Implements IState.EnableState
+        Public Property EnableState As Boolean Implements IStateObject.EnableState
 
 
         Public Overridable Function RenderHtml() As String Implements IHtmlControl.RenderHtml
@@ -65,7 +65,7 @@ Namespace Controls
         ''' <summary>
         ''' Восстанавливаем свойства контрола из объекта состояния
         ''' </summary>
-        Public Overridable Sub FromState(State As ViewObject) Implements IState.FromState
+        Public Overridable Sub FromState(State As ViewObject) Implements IStateObject.FromState
             If State.ContainsKey(NameOf(EnableState)) Then EnableState = CBool(State(NameOf(EnableState)))
 
             If EnableState Then
@@ -80,7 +80,7 @@ Namespace Controls
         ''' <summary>
         ''' Сохраняем свойства контрола в объект состояния
         ''' </summary>
-        Public Overridable Function ToState() As ViewObject Implements IState.ToState
+        Public Overridable Function ToState() As ViewObject Implements IStateObject.ToState
             Dim state As New ViewObject()
 
             ' Принудительно добавляем свойство в состояние

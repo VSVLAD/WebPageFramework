@@ -1,7 +1,7 @@
 ﻿Namespace Controls
 
     Public Interface IHtmlControl
-        Inherits IControl, IState
+        Inherits IControl, IStateObject
 
         ''' <summary>
         ''' Класс CSS

@@ -8,9 +8,9 @@ Public Module WebPagesHelper
 
     ' Создать объект состояния
     <Extension>
-    Public Function GenerateState(ThisPage As Page, StateProvider As IStateProvider) As String
+    Public Sub PageStateSave(ThisPage As Page, StateProvider As IStateProvider, StateFormatter As IStateFormatter)
 
-        ' Создаём дерево состояния
+        ' Готовим дерево состояния
         Dim treeState As New ViewObject()
 
         ' Добавляем собственное состояние формы в ключ $base
@@ -44,20 +44,21 @@ Public Module WebPagesHelper
             End If
         Next
 
-        ' Сериализуем в дерево
-        Return StateProvider.SaveState(treeState)
-    End Function
+        ' Сериализуем в дерево и сохраняемв хранилище
+        StateProvider.ToStorage(StateFormatter.SerializeState(treeState), ThisPage)
+    End Sub
 
     ' Загружаем объект состояния и применяем к элементам управления
     <Extension>
-    Public Sub ApplyState(ThisPage As Page, StateProvider As IStateProvider)
-        Dim viewState = ThisPage.Form(Page.FieldNameViewState)
+    Public Sub PageStateLoad(ThisPage As Page, StateProvider As IStateProvider, StateFormatter As IStateFormatter)
 
-        ' Если присутствует объект состояния
-        If Not String.IsNullOrEmpty(viewState) Then
+        ' Читаем запакованное состояние из хранилища
+        Dim packedTreeState = StateProvider.FromStorage(ThisPage)
+
+        If Not String.IsNullOrEmpty(packedTreeState) Then
 
             ' Десериализуем в дерево
-            Dim treeState = StateProvider.LoadState(viewState)
+            Dim treeState = StateFormatter.DeserializeState(packedTreeState)
 
             ' Если есть состояние формы
             If treeState.ContainsKey("$base") Then
@@ -176,12 +177,6 @@ Public Module WebPagesHelper
 </script>
 "
         ThisPage.ViewData("__formEnd") = "</form>"
-    End Sub
-
-    ' Создаёт заполнитель для объекта состояния
-    <Extension>
-    Public Sub GenerateStateViewData(ThisPage As Page, State As String)
-        ThisPage.ViewData("__formViewState") = $"<input type=""hidden"" name=""{Page.FieldNameViewState}"" value=""{State}"" />"
     End Sub
 
 End Module

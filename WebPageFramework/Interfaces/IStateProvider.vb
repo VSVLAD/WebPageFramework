@@ -1,7 +1,18 @@
-﻿Public Interface IStateProvider
+﻿''' <summary>
+''' Интерфейс предоставляет методы для сохранения и загрузки объектов состояния из поддерживаемого хранилища
+''' </summary>
+Public Interface IStateProvider
 
-    Function LoadState(State As String) As ViewObject
+    ''' <summary>
+    ''' Метод должен вернуть потребителю ранее сохраненный объект состояния из хранилища. Если состояния нет, то вернуть Nothing
+    ''' </summary>
+    Function FromStorage(Page As IPage) As String
 
-    Function SaveState(State As ViewObject) As String
+    ''' <summary>
+    ''' Метод должен сохранить объект состояния в постоянное хранилище. Для идентификации состояния также передаётся уникальный ключ, который генерирует потребитель
+    ''' </summary>
+    ''' <param name="TreeState">Объект состояния</param>
+    ''' <param name="Key">Уникальный ключ состояния</param>
+    Sub ToStorage(TreeState As String, Page As IPage)
 
 End Interface

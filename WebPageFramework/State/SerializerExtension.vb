@@ -10,7 +10,7 @@ Public Module SerializerExtension
 
     Private ReadOnly serializerOptions As New JsonSerializerOptions() With {.Encoder = JavaScriptEncoder.Create(Unicode.UnicodeRanges.All)}
 
-    Private Class StateTypeInfo
+    Private Class ViewObjectType
 
         <JsonPropertyName("$type")>
         Public Property Type As String
@@ -36,7 +36,7 @@ Public Module SerializerExtension
     Public Function DeserializeWithTypeInfo(json As String) As ViewObject
 
         ' Десериализуем JSON в словарь объектов TypedObject
-        Dim typedDictionary = JsonSerializer.Deserialize(Of Dictionary(Of String, StateTypeInfo))(json)
+        Dim typedDictionary = JsonSerializer.Deserialize(Of Dictionary(Of String, ViewObjectType))(json)
 
         ' Преобразуем значения обратно в объекты исходных типов
         Dim result As New ViewObject
@@ -49,7 +49,7 @@ Public Module SerializerExtension
     End Function
 
     ' Рекурсивный метод для обертывания объектов в TypedObject с учетом вложенности
-    Private Function WrapObjectWithTypeInfo(value As Object) As StateTypeInfo
+    Private Function WrapObjectWithTypeInfo(value As Object) As ViewObjectType
         If TypeOf value Is ViewObject Then
 
             ' Рекурсивно обрабатываем вложенный словарь
@@ -58,27 +58,27 @@ Public Module SerializerExtension
                                                     Function(innerKvp) WrapObjectWithTypeInfo(innerKvp.Value)
                                                 )
             ' Сериализуем вложенный словарь как JsonElement
-            Return New StateTypeInfo With {
+            Return New ViewObjectType With {
                             .Type = GetType(ViewObject).FullName,
                             .Value = JsonSerializer.SerializeToElement(nestedDict, serializerOptions)
                         }
         Else
             ' Для обычных объектов возвращаем тип и значение
-            Return New StateTypeInfo With {
+            Return New ViewObjectType With {
                             .Type = value.GetType().FullName,
                             .Value = JsonSerializer.SerializeToElement(value, serializerOptions)
                         }
         End If
     End Function
 
-    Private Function UnwrapObjectWithTypeInfo(typedObj As StateTypeInfo) As Object
+    Private Function UnwrapObjectWithTypeInfo(typedObj As ViewObjectType) As Object
         Dim targetType = Type.GetType(typedObj.Type)
         Dim targetValue = DirectCast(typedObj.Value, JsonElement)
 
         If targetType Is GetType(ViewObject) Then
 
             ' Десериализуем вложенный словарь и рекурсивно обрабатываем каждый элемент
-            Dim nestedDict As Dictionary(Of String, StateTypeInfo) = JsonSerializer.Deserialize(Of Dictionary(Of String, StateTypeInfo))(targetValue)
+            Dim nestedDict As Dictionary(Of String, ViewObjectType) = JsonSerializer.Deserialize(Of Dictionary(Of String, ViewObjectType))(targetValue)
 
             Return New ViewObject(nestedDict.ToDictionary(
                                                     Function(innerKvp) innerKvp.Key,

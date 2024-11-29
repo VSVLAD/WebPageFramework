@@ -4,7 +4,7 @@ Imports Microsoft.AspNetCore.Http
 Imports WebPages.Controls
 
 Public Interface IPage
-    Inherits IControl, IContainer, IViewData, IState
+    Inherits IControl, IContainer, IViewData, IStateObject
 
     ''' <summary>
     ''' Доступ к контексту веб-запроса
