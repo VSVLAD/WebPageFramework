@@ -33,9 +33,9 @@ Public MustInherit Class Fragment
     ''' <summary>
     ''' Ссылка на страницу, где содержится фрагмент
     ''' </summary>
-    Public ReadOnly Property Page As IPage
+    Public ReadOnly Property Page As Page
         Get
-            Return DirectCast(Me.Parent, IPage)
+            Return DirectCast(Me.Parent, Page)
         End Get
     End Property
 
@@ -48,7 +48,7 @@ Public MustInherit Class Fragment
         Me.Parent = Parent
 
         ' Добавим элемент управления в форму
-        If TypeOf Parent Is IPage Then
+        If TypeOf Parent Is Page Then
             If Not Me.Page.Controls.ContainsKey(Id) Then
                 Me.Page.Controls.Add(Id, Me)
             End If
@@ -75,7 +75,7 @@ Public MustInherit Class Fragment
         If Not Visible Then Return String.Empty
 
         ' Читаем шаблон фрагмента
-        Dim tplContent = Page.Options.TemplateProvider.GetTemplate(Me.GetType().Name)
+        Dim tplContent = Page.GetWebPagesOptions().TemplateProvider.GetTemplate(Me.GetType().Name)
 
         ' Отрисовываем системные и пользовательские заменители
         For Each item In ViewData
@@ -152,6 +152,5 @@ Public MustInherit Class Fragment
     Public Sub OnRender() Implements IContainerEvents.OnRender
         RaiseEvent Render()
     End Sub
-
 
 End Class

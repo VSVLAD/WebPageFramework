@@ -10,4 +10,13 @@ Public Class WebPagesOptions
 
     Public Property MappedPages As Dictionary(Of String, Type)
 
+    Public Function Clone() As WebPagesOptions
+        Return New WebPagesOptions() With {
+                        .StateFormatter = Me.StateFormatter,
+                        .StateProvider = Me.StateProvider,
+                        .TemplateProvider = Me.TemplateProvider,
+                        .MappedPages = New Dictionary(Of String, Type)(Me.MappedPages)
+                    }
+    End Function
+
 End Class

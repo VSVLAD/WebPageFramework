@@ -14,9 +14,9 @@ Public MustInherit Class Page
     Public Const FieldNameEventArgument = "wpEventArgument"
     Public Const FunctionNamePostBack = "wpPostBack"
 
+    Public Property Options As WebPagesOptions Implements IPage.Options
     Public Property Context As HttpContext Implements IPage.Context
     Public Property Environment As IWebHostEnvironment Implements IPage.Environment
-    Public Property Options As WebPagesOptions Implements IPage.Options
     Public Property Form As IFormCollection Implements IPage.Form
     Public Property Id As String Implements IControl.Id
     Public Property Controls As Dictionary(Of String, IHtmlControl) Implements IContainer.Controls
@@ -36,6 +36,13 @@ Public MustInherit Class Page
         Me.ViewState = New ViewObject()
         Me.EnableState = True
     End Sub
+
+    ''' <summary>
+    ''' Метод должен вернуть контейнер с опциями. Может быть переопределён конкретной страницей
+    ''' </summary>
+    Public Overridable Function GetWebPagesOptions() As WebPagesOptions
+        Return Me.Options
+    End Function
 
     ''' <summary>
     ''' Обработка формы
@@ -61,7 +68,7 @@ Public MustInherit Class Page
         Me.OnInit()
 
         ' Загружаем состояние
-        Dim pageStateAvailable = Me.PageLoadState(Options.StateProvider, Options.StateFormatter)
+        Dim pageStateAvailable = Me.PageLoadState(Me.GetWebPagesOptions().StateProvider, Me.GetWebPagesOptions().StateFormatter)
 
         ' Если состояние было успешно прочитано и был PostBack
         ' Пояснение: контролы должны как минимум иметь загруженное состояние с момента первичной загрузки
@@ -86,7 +93,7 @@ Public MustInherit Class Page
         End If
 
         ' Сохраняем состояние
-        Me.PageSaveState(Options.StateProvider, Options.StateFormatter)
+        Me.PageSaveState(Me.GetWebPagesOptions().StateProvider, Me.GetWebPagesOptions().StateFormatter)
 
         Await Task.CompletedTask
     End Function
@@ -100,7 +107,7 @@ Public MustInherit Class Page
         Me.OnRender()
 
         ' Читаем шаблон
-        Dim tplContent = Options.TemplateProvider.GetTemplate(Me.Id)
+        Dim tplContent = Me.GetWebPagesOptions().TemplateProvider.GetTemplate(Me.Id)
 
         ' Генерируем заполнитель для формы
         Me.GenerateBeginEndViewData()

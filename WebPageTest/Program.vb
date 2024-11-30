@@ -27,10 +27,7 @@ Public Module Program
         app.MapWebPage(Of IndexPage)("/IndexPage.htm")
 
         ' Подключаем веб-страницы
-        app.UseWebPages(New WebPagesOptions() With {
-                                .StateFormatter = New DefaultStateFormatter("", "", False, False),
-                                .StateProvider = New SessionStateProvider()
-                            })
+        app.UseWebPages()
         app.UseStaticFiles()
 
         app.Run()
