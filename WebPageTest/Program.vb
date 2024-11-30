@@ -28,6 +28,7 @@ Public Module Program
 
         ' Подключаем веб-страницы
         app.UseWebPages(New WebPagesOptions() With {
+                                .StateFormatter = New DefaultStateFormatter("", "", False, False),
                                 .StateProvider = New SessionStateProvider()
                             })
         app.UseStaticFiles()

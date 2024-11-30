@@ -33,7 +33,7 @@ Public Class IndexPage
 
             ' Каждые 5 секунд будем нажимать сами на зелёную кнопку
             timer1.Enabled = False
-            timer1.Interval = 5000
+            timer1.Interval = 10
             timer1.ResetCounter = True
         End If
 

@@ -61,10 +61,11 @@ Public MustInherit Class Page
         Me.OnInit()
 
         ' Загружаем состояние
-        Dim pageStateAvailable = Me.PageStateLoad(Options.StateProvider, Options.StateFormatter)
+        Dim pageStateAvailable = Me.PageLoadState(Options.StateProvider, Options.StateFormatter)
 
-        ' Если был PostBack
-        If Me.Form IsNot Nothing Then
+        ' Если состояние было успешно прочитано и был PostBack
+        ' Пояснение: контролы должны как минимум иметь загруженное состояние с момента первичной загрузки
+        If pageStateAvailable AndAlso Me.Form IsNot Nothing Then
 
             ' Применяем текущее значение полученное из формы
             Me.ApplyControlFormValue()
@@ -76,7 +77,7 @@ Public MustInherit Class Page
             Me.GenerateControlEvent()
 
         Else
-            ' Если не было PostBack, но состояние загружено
+            ' Если не было PostBack, но состояние было успешно прочитано
             If pageStateAvailable Then
                 Me.OnLoad(False) ' Повторная загрузка
             Else
@@ -85,7 +86,7 @@ Public MustInherit Class Page
         End If
 
         ' Сохраняем состояние
-        Me.PageStateSave(Options.StateProvider, Options.StateFormatter)
+        Me.PageSaveState(Options.StateProvider, Options.StateFormatter)
 
         Await Task.CompletedTask
     End Function
@@ -104,24 +105,9 @@ Public MustInherit Class Page
         ' Генерируем заполнитель для формы
         Me.GenerateBeginEndViewData()
 
-        ' Отрисовываем системные заполнители
-        Dim lastTemplateLength = tplContent.Length
-        tplContent.Replace("<form>", $"{ViewData("__formBegin")}{ViewData("__formState")}")
-
-        If lastTemplateLength = tplContent.Length Then
-            Throw New Exception($"Шаблон страницы ""{Id}"" должен содержать начальный тег <form> без атрибутов")
-        End If
-
-        lastTemplateLength = tplContent.Length
-        tplContent.Replace("</form>", $"{ViewData("__formEnd")} ")
-
-        If lastTemplateLength = tplContent.Length Then
-            Throw New Exception($"Шаблон страницы ""{Id}"" должен содержать закрывающий тег </form>")
-        End If
-
-        ' Отрисовываем пользовательские заполнители
+        ' Отрисовываем заполнители
         For Each item In ViewData
-            tplContent.Replace($"{{{{ {item.Key} }}}}", item.Value.ToString())
+            tplContent.Replace($"{{{{ {item.Key} }}}}", item.Value?.ToString())
         Next
 
         ' Отрисовываем контролы

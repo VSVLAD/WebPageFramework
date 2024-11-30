@@ -12,10 +12,10 @@ Public Module DefaultStateFormatterExtension
 
     Private Class ViewObjectType
 
-        <JsonPropertyName("$type")>
+        <JsonPropertyName("$t")>
         Public Property Type As String
 
-        <JsonPropertyName("$value")>
+        <JsonPropertyName("$v")>
         Public Property Value As Object
 
     End Class

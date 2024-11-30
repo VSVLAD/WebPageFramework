@@ -20,10 +20,11 @@ Namespace Controls
 
             ' Значение свойств по-умолчанию, далее их могут перебивать значения из состояния
             Me.Attributes = New Dictionary(Of String, String)
+            Me.CSS = String.Empty
             Me.EnableState = True
+            Me.EnableEvents = True
             Me.Enabled = True
             Me.Visible = True
-            Me.EnableEvents = True
 
             ' Добавляем элемент в коллекцию контролов родителя
             If Not Me.Parent.Controls.ContainsKey(Id) Then

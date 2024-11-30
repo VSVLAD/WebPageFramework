@@ -8,7 +8,7 @@ Public Module WebPagesHelper
 
     ' Создать объект состояния
     <Extension>
-    Public Sub PageStateSave(ThisPage As Page, StateProvider As IStateProvider, StateFormatter As IStateFormatter)
+    Public Sub PageSaveState(ThisPage As Page, StateProvider As IStateProvider, StateFormatter As IStateFormatter)
 
         ' Готовим дерево состояния
         Dim treeState As New ViewObject()
@@ -50,7 +50,7 @@ Public Module WebPagesHelper
 
     ' Загружаем объект состояния и применяем к элементам управления
     <Extension>
-    Public Function PageStateLoad(ThisPage As Page, StateProvider As IStateProvider, StateFormatter As IStateFormatter) As Boolean
+    Public Function PageLoadState(ThisPage As Page, StateProvider As IStateProvider, StateFormatter As IStateFormatter) As Boolean
 
         ' Читаем запакованное состояние из хранилища
         Dim packedTreeState = StateProvider.FromStorage(ThisPage)
@@ -164,20 +164,21 @@ Public Module WebPagesHelper
     <Extension>
     Public Sub GenerateBeginEndViewData(ThisPage As Page)
         ThisPage.ViewData("__formBegin") = $"<form name=""{HttpUtility.HtmlAttributeEncode(ThisPage.Id)}"" action=""{ThisPage.Context.Request.Path}"" method=""post"">
-<input type=""hidden"" name=""{Page.FieldNameEventControl}"" value="""" />
-<input type=""hidden"" name=""{Page.FieldNameEventName}"" value="""" />
-<input type=""hidden"" name=""{Page.FieldNameEventArgument}"" value="""" />
-<script type=""text/javascript"">
-    function {Page.FunctionNamePostBack}({Page.FieldNameEventControl}, {Page.FieldNameEventName}, {Page.FieldNameEventArgument}) {{
-        let form = document.forms[""{HttpUtility.HtmlAttributeEncode(ThisPage.Id)}""];
-        if (!form.onsubmit || form.onsubmit()) {{
-            form.{Page.FieldNameEventControl}.value = {Page.FieldNameEventControl};
-            form.{Page.FieldNameEventName}.value = {Page.FieldNameEventName};
-            form.{Page.FieldNameEventArgument}.value = {Page.FieldNameEventArgument};
-            form.submit();
+    <input type=""hidden"" name=""{Page.FieldNameEventControl}"" value="""" />
+    <input type=""hidden"" name=""{Page.FieldNameEventName}"" value="""" />
+    <input type=""hidden"" name=""{Page.FieldNameEventArgument}"" value="""" />
+
+    <script type=""text/javascript"">
+        function {Page.FunctionNamePostBack}({Page.FieldNameEventControl}, {Page.FieldNameEventName}, {Page.FieldNameEventArgument}) {{
+            let form = document.forms[""{HttpUtility.HtmlAttributeEncode(ThisPage.Id)}""];
+            if (!form.onsubmit || form.onsubmit()) {{
+                form.{Page.FieldNameEventControl}.value = {Page.FieldNameEventControl};
+                form.{Page.FieldNameEventName}.value = {Page.FieldNameEventName};
+                form.{Page.FieldNameEventArgument}.value = {Page.FieldNameEventArgument};
+                form.submit();
+            }}
         }}
-    }}
-</script>
+    </script>
 "
         ThisPage.ViewData("__formEnd") = "</form>"
     End Sub

@@ -9,35 +9,36 @@
     <title>{{ Title }}</title>
 </head>
 <body>
-    <form>
-        <section class="container">
-            <div class="row">
-                <div class="col-12 bg-dark text-white">
-                    <h1 class="h4 py-3 px-5">{{ H1 }}</h1>
-                </div>
+    {{ __formBegin }}
+    {{ __formState }}
+    <section class="container">
+        <div class="row">
+            <div class="col-12 bg-dark text-white">
+                <h1 class="h4 py-3 px-5">{{ H1 }}</h1>
             </div>
-        </section>
-        <section class="container">
-            <div class="row mt-3">
-                <div class="col-md-6">
-                    {{ formTxt1 }}
-                    {{ formBtnBs1 }}
-                </div>
-                <div class="col-md-6">
-                    {{ formBtn2 }}
-                </div>
-                <div class="col-md-4 mt-4">
-                    {{ formCmb1 }}
-                </div>
+        </div>
+    </section>
+    <section class="container">
+        <div class="row mt-3">
+            <div class="col-md-6">
+                {{ formTxt1 }}
+                {{ formBtnBs1 }}
             </div>
-            <div class="row mt-3">
-                <div class="col-12">
-                    {{ fragmentAlert }}
-                </div>
+            <div class="col-md-6">
+                {{ formBtn2 }}
             </div>
-        </section>
+            <div class="col-md-4 mt-4">
+                {{ formCmb1 }}
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-12">
+                {{ fragmentAlert }}
+            </div>
+        </div>
+    </section>
+    {{ __formEnd }}
 
-        {{ timer1 }}
-    </form>
+    {{ timer1 }}
 </body>
 </html>
