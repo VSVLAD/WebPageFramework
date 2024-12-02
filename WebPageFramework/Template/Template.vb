@@ -1,10 +1,6 @@
 ﻿Imports System.Text
-Imports System.Text.RegularExpressions
 
 Public Class Template
-
-    Private Shared reBeginBody As New Regex("<body>", RegexOptions.Compiled Or RegexOptions.IgnoreCase)
-    Private Shared reEndBody As New Regex("</body>", RegexOptions.Compiled Or RegexOptions.IgnoreCase)
 
     Private sbContent As StringBuilder
 
