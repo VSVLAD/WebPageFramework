@@ -71,7 +71,7 @@ Namespace Controls
                                         const currentTime = new Date().getTime();
                                         if (currentTime >= nextExecutionTime) {{
                                             clearInterval(timerId);
-                                            wpPostBack('{HttpUtility.HtmlAttributeEncode(Id)}', 'Tick', '');
+                                            {FunctionNamePostBack}('{HttpUtility.HtmlAttributeEncode(Id)}', 'Tick', '');
                                         }}
                                     }}
 
@@ -81,7 +81,7 @@ Namespace Controls
                             </script>"
                 Else
                     Return $"<script defer>
-                                setTimeout(() => wpPostBack('{HttpUtility.HtmlAttributeEncode(Id)}', 'Tick', ''), {Interval});
+                                setTimeout(() => {FunctionNamePostBack}('{HttpUtility.HtmlAttributeEncode(Id)}', 'Tick', ''), {Interval});
                             </script>"
                 End If
             Else

@@ -52,7 +52,7 @@ Namespace Controls
                 End If
 
                 If EnableEvents Then
-                    strBuffer.Append($" onchange=""javascript:setTimeout(wpPostBack('{HttpUtility.HtmlAttributeEncode(Id)}','TextChanged', ''), 0)""")
+                    strBuffer.Append($" onchange=""javascript:setTimeout({FunctionNamePostBack}('{HttpUtility.HtmlAttributeEncode(Id)}','TextChanged', ''), 0)""")
                 End If
 
                 strBuffer.Append($">{HttpUtility.HtmlEncode(Text)}")
@@ -76,7 +76,7 @@ Namespace Controls
                 strBuffer.Append($" value=""{HttpUtility.HtmlAttributeEncode(Text)}""")
 
                 If EnableEvents Then
-                    strBuffer.Append($" onchange=""javascript:setTimeout(wpPostBack('{HttpUtility.HtmlAttributeEncode(Id)}','TextChanged', ''), 0)""")
+                    strBuffer.Append($" onchange=""javascript:setTimeout({FunctionNamePostBack}('{HttpUtility.HtmlAttributeEncode(Id)}','TextChanged', ''), 0)""")
                 End If
 
                 strBuffer.Append(" />")

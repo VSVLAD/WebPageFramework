@@ -8,6 +8,13 @@ Namespace Controls
     Public MustInherit Class HtmlControl
         Implements IHtmlControl, IStateObject
 
+        ' Название полей для внутренней инфраструктуры состояния и событий
+        Public Const FieldNameEventControl = "wpEventControl"
+        Public Const FieldNameEventName = "wpEventName"
+        Public Const FieldNameEventArgument = "wpEventArgument"
+        Public Const FunctionNamePostBack = "wpPostBack"
+
+        ' Общий делегат для событий контрола
         Public Delegate Sub HtmlControlEventHandler(sender As HtmlControl, e As HtmlControlEventArgs)
 
         Public Sub New(Parent As IContainer, Id As String)

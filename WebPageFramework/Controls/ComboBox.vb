@@ -49,7 +49,7 @@ Namespace Controls
             Next
 
             If EnableEvents Then
-                strBuffer.Append($" onchange=""javascript:setTimeout(wpPostBack('{HttpUtility.HtmlAttributeEncode(Id)}','SelectedItemChanged', ''), 0)""")
+                strBuffer.Append($" onchange=""javascript:setTimeout({FunctionNamePostBack}('{HttpUtility.HtmlAttributeEncode(Id)}','SelectedItemChanged', ''), 0)""")
             End If
 
             strBuffer.Append($">{vbCrLf}")

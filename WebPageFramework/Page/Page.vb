@@ -8,12 +8,6 @@ Imports WebPages.Controls
 Public MustInherit Class Page
     Implements IPage, IStateObject, IContainerEvents
 
-    ' Название полей для внутренней инфраструктуры состояния и событий
-    Public Const FieldNameEventControl = "wpEventControl"
-    Public Const FieldNameEventName = "wpEventName"
-    Public Const FieldNameEventArgument = "wpEventArgument"
-    Public Const FunctionNamePostBack = "wpPostBack"
-
     Public Property Options As WebPagesOptions Implements IPage.Options
     Public Property Context As HttpContext Implements IPage.Context
     Public Property Environment As IWebHostEnvironment Implements IPage.Environment

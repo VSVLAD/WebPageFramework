@@ -123,9 +123,9 @@ Public Module WebPagesHelper
     Public Sub GenerateControlEvent(ThisPage As Page)
         Dim ctlEvent As IHtmlControl = Nothing
 
-        Dim eventControl = ThisPage.Form(Page.FieldNameEventControl)
-        Dim eventName = ThisPage.Form(Page.FieldNameEventName)
-        Dim eventArgument = ThisPage.Form(Page.FieldNameEventArgument)
+        Dim eventControl = ThisPage.Form(HtmlControl.FieldNameEventControl)
+        Dim eventName = ThisPage.Form(HtmlControl.FieldNameEventName)
+        Dim eventArgument = ThisPage.Form(HtmlControl.FieldNameEventArgument)
 
         ' Ищем элемент управления
         If Not String.IsNullOrEmpty(eventControl) Then
@@ -164,17 +164,17 @@ Public Module WebPagesHelper
     <Extension>
     Public Sub GenerateBeginEndViewData(ThisPage As Page)
         ThisPage.ViewData("__formBegin") = $"<form name=""{HttpUtility.HtmlAttributeEncode(ThisPage.Id)}"" action=""{ThisPage.Context.Request.Path}"" method=""post"">
-    <input type=""hidden"" name=""{Page.FieldNameEventControl}"" value="""" />
-    <input type=""hidden"" name=""{Page.FieldNameEventName}"" value="""" />
-    <input type=""hidden"" name=""{Page.FieldNameEventArgument}"" value="""" />
+    <input type=""hidden"" name=""{HtmlControl.FieldNameEventControl}"" value="""" />
+    <input type=""hidden"" name=""{HtmlControl.FieldNameEventName}"" value="""" />
+    <input type=""hidden"" name=""{HtmlControl.FieldNameEventArgument}"" value="""" />
 
     <script type=""text/javascript"">
-        function {Page.FunctionNamePostBack}({Page.FieldNameEventControl}, {Page.FieldNameEventName}, {Page.FieldNameEventArgument}) {{
+        function {HtmlControl.FunctionNamePostBack}({HtmlControl.FieldNameEventControl}, {HtmlControl.FieldNameEventName}, {HtmlControl.FieldNameEventArgument}) {{
             let form = document.forms[""{HttpUtility.HtmlAttributeEncode(ThisPage.Id)}""];
             if (!form.onsubmit || form.onsubmit()) {{
-                form.{Page.FieldNameEventControl}.value = {Page.FieldNameEventControl};
-                form.{Page.FieldNameEventName}.value = {Page.FieldNameEventName};
-                form.{Page.FieldNameEventArgument}.value = {Page.FieldNameEventArgument};
+                form.{HtmlControl.FieldNameEventControl}.value = {HtmlControl.FieldNameEventControl};
+                form.{HtmlControl.FieldNameEventName}.value = {HtmlControl.FieldNameEventName};
+                form.{HtmlControl.FieldNameEventArgument}.value = {HtmlControl.FieldNameEventArgument};
                 form.submit();
             }}
         }}

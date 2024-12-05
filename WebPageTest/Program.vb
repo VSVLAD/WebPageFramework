@@ -8,6 +8,7 @@ Imports WebPages
 Public Module Program
 
     Public Sub Main(args() As String)
+
         Encoding.RegisterProvider(CodePagesEncodingProvider.Instance)
 
         Dim builder = WebApplication.CreateBuilder(args)

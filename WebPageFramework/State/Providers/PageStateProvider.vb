@@ -3,7 +3,7 @@
 Public Class PageStateProvider
     Implements IStateProvider
 
-    Private Const FieldNameViewState = "wpViewState"
+    Private Const FieldNameViewState = "wpState"
 
     ''' <summary>
     ''' Записать состояние в хранилище
