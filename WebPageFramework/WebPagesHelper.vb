@@ -168,7 +168,7 @@ Public Module WebPagesHelper
     <input type=""hidden"" name=""{HtmlControl.FieldNameEventName}"" value="""" />
     <input type=""hidden"" name=""{HtmlControl.FieldNameEventArgument}"" value="""" />
 
-    <script type=""text/javascript"">
+    <script>
         function {HtmlControl.FunctionNamePostBack}({HtmlControl.FieldNameEventControl}, {HtmlControl.FieldNameEventName}, {HtmlControl.FieldNameEventArgument}) {{
             let form = document.forms[""{HttpUtility.HtmlAttributeEncode(ThisPage.Id)}""];
             if (!form.onsubmit || form.onsubmit()) {{
@@ -181,6 +181,11 @@ Public Module WebPagesHelper
     </script>
 "
         ThisPage.ViewData("__formEnd") = "</form>"
+    End Sub
+
+    <Extension>
+    Public Sub RegisterClientJavascript(ThisPage As Page, ScriptBody As String, Defer As Boolean, Async As Boolean)
+
     End Sub
 
 End Module
