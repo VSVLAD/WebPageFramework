@@ -1,4 +1,4 @@
-Option Strict On
+п»їOption Strict On
 
 Imports Microsoft.AspNetCore.Builder
 Imports Microsoft.Extensions.DependencyInjection
@@ -22,12 +22,12 @@ Public Module Program
         app.UseSession()
         app.UseResponseCompression()
 
-        ' Сначала маппим адреса
+        ' РЎРЅР°С‡Р°Р»Р° РјР°РїРїРёРј Р°РґСЂРµСЃР°
         app.MapWebPage(Of IndexPage)("/")
         app.MapWebPage(Of IndexPage)("/IndexPage")
         app.MapWebPage(Of IndexPage)("/IndexPage.htm")
 
-        ' Подключаем веб-страницы
+        ' РџРѕРґРєР»СЋС‡Р°РµРј РІРµР±-СЃС‚СЂР°РЅРёС†С‹
         app.UseWebPages()
         app.UseStaticFiles()
 
