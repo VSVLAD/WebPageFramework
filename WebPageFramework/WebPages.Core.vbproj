@@ -7,6 +7,7 @@
     <LangVersion>Latest</LangVersion>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <IsPackable>true</IsPackable>
     <Title>WebPages Framework</Title>
     <PackageProjectUrl>https://github.com/VSVLAD/WebPageFramework</PackageProjectUrl>
     <Copyright>https://github.com/VSVLAD/WebPageFramework?tab=MIT-1-ov-file</Copyright>
