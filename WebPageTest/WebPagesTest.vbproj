@@ -8,11 +8,20 @@
     <TargetFramework>net8.0</TargetFramework>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <Optimize>False</Optimize>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <Optimize>True</Optimize>
+  </PropertyGroup>
+
   <ItemGroup>
     <Compile Remove="IndexPage.vb" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="My Project\launchSettings.json" />
     <Content Include="Pages\AlertFragment.vb" />
     <Content Include="Pages\IndexPage.vb" />
   </ItemGroup>
