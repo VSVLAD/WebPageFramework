@@ -127,16 +127,16 @@ Public Module WebPagesHelper
         Dim eventName = ThisPage.Form(HtmlControl.FieldNameEventName)
         Dim eventArgument = ThisPage.Form(HtmlControl.FieldNameEventArgument)
 
-        ' Ищем элемент управления
+        ' Ищем элемент управления. Если ЭУ не задан, значит это пустой Postback
         If Not String.IsNullOrEmpty(eventControl) Then
             ctlEvent = FindControl(ThisPage, eventControl)
-        End If
 
-        ' Если было событие от элемента управления и такой элемент управления существует
-        If ctlEvent IsNot Nothing Then
-            ctlEvent.ProcessControlEvent(eventName, eventArgument)
-        Else
-            Throw New Exception($"Элемент управления ""{eventControl}"" создал событие, но он не зарегистрирован в веб-форме")
+            ' Если было событие от элемента управления и такой элемент управления существует
+            If ctlEvent IsNot Nothing Then
+                ctlEvent.ProcessControlEvent(eventName, eventArgument)
+            Else
+                Throw New Exception($"Элемент управления ""{eventControl}"" создал событие, но он не зарегистрирован в веб-форме")
+            End If
         End If
     End Sub
 
