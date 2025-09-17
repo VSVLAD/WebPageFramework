@@ -22,7 +22,8 @@ End Class
     <link type="text/css" rel="stylesheet" href="/lib/bootstrap/bootstrap.css" />
 </head>
 <body>
-<form>
+    {{ __formBegin }}
+    {{ __formState }}
     <section class="container">
         <div class="row">
             <div class="col-12 bg-dark text-white">
@@ -37,12 +38,12 @@ End Class
             </div>
         </div>
     </section>
-</form>
+    {{ __formEnd }}
 </body>
 </html>
 ```
 
-Обязательные теги ```<form>``` и ```</form>``` переписываются в форму, добавляются скрипты для PostBack запросов, скрытые поля для хранения объекта порождающий события, а также скрытое поле для объекта состояния.
+Обязательные заполнители ```__formBegin``` и ```__formEnd``` переписываются в форму, добавляются скрипты для PostBack запросов, скрытые поля для хранения объекта порождающий события, а также скрытое поле для объекта состояния.
 Объект состояния сериализуется в JSON, далее упаковывается и шифруется. По-умолчанию в него записываются все свойства элементов управления, которые изменились после их инициализации.
 
 Заполнитель ```{{ formTxt1 }}``` должен быть связан с текстовым полем. Для этого в классе страницы требуется зарегистрировать элемент управления. Перепишем класс таким образом:
@@ -60,11 +61,12 @@ Public Class IndexPage
         If FirstRun Then
             formTxt1.CSS = "form-control"
             formTxt1.Text = "Ваш текст здесь ..."
+            ViewData("H1") = "Напишите в текстовом поле что-нибудь"
         End If
     End Sub
 
-    Private Sub formTxt1_TextChanged(arg1 As TextBox, arg2 As String) Handles formTxt1.TextChanged
-        ViewData("H1") = txt1.Text & " " & Now.Date().ToString()
+    Private Sub formTxt1_TextChanged(sender As HtmlControl, e As HtmlControlEventArgs) Handles formTxt1.TextChanged
+        ViewData("H1") = txt1.Text & " " & Now.ToString()
     End Sub
 
 End Class
