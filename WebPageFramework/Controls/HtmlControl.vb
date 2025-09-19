@@ -1,4 +1,6 @@
 ﻿Option Strict On
+Imports Microsoft.AspNetCore.Http
+Imports System.Threading
 
 Namespace Controls
 
@@ -8,11 +10,12 @@ Namespace Controls
     Public MustInherit Class HtmlControl
         Implements IHtmlControl, IStateObject
 
-        ' Название полей для внутренней инфраструктуры состояния и событий
-        Public Const FieldNameEventControl = "wpEventControl"
-        Public Const FieldNameEventName = "wpEventName"
-        Public Const FieldNameEventArgument = "wpEventArgument"
-        Public Const FunctionNamePostBack = "wpPostBack"
+        ' Название полей для внутренней инфраструктуры состояния и событий. Не рекомендуется менять без необходимости
+        Public Shared Property FieldNameEventControl As String = "wpEventControl"
+        Public Shared Property FieldNameEventName As String = "wpEventName"
+        Public Shared Property FieldNameEventArgument As String = "wpEventArgument"
+        Public Shared Property FunctionNamePostBack As String = "wpPostBack"
+        Public Shared Property FormEncType As String = "application/x-www-form-urlencoded"
 
         ' Общий делегат для событий контрола
         Public Delegate Sub HtmlControlEventHandler(sender As HtmlControl, e As HtmlControlEventArgs)
@@ -65,9 +68,15 @@ Namespace Controls
         End Function
 
         Public Overridable Sub ProcessControlEvent(EventName As String, EventArgument As String) Implements IHtmlControl.ProcessControlEvent
+
         End Sub
 
         Public Overridable Sub ProcessFormData(Value As String) Implements IHtmlControl.ProcessFormData
+
+        End Sub
+
+        Public Overridable Sub ProcessFile(Files As IEnumerable(Of IFormFile), cancellationToken As CancellationToken) Implements IHtmlControl.ProcessFile
+
         End Sub
 
         ''' <summary>

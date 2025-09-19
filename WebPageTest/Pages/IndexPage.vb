@@ -1,5 +1,6 @@
 ﻿Option Strict On
 
+Imports System.IO
 Imports WebPages
 Imports WebPages.Controls
 
@@ -14,6 +15,10 @@ Public Class IndexPage
     Private WithEvents fragmentAlert As New AlertFragment(Me, NameOf(fragmentAlert))
     Private WithEvents timer1 As New Timer(Me, NameOf(timer1))
 
+    Private WithEvents uploadAvatar As New FileUpload(Me, NameOf(uploadAvatar))
+    Private WithEvents btnUpload As New Button(Me, NameOf(btnUpload))
+
+
     Private Sub IndexPage_Load(FirstRun As Boolean) Handles Me.Load
         If FirstRun Then
             formTxt1.CSS = "form-control"
@@ -26,6 +31,12 @@ Public Class IndexPage
             formCmb1.EnableEvents = False
             formCmb1.CSS = "form-select"
             formCmb1.Items.Clear()
+
+            uploadAvatar.Multiple = True
+            uploadAvatar.CSS = "form-control"
+
+            btnUpload.Text = "Загрузить файл >>"
+            btnUpload.CSS = "btn btn-secondary"
 
             For Each y In Enumerable.Range(2000, 25)
                 formCmb1.Items.Add(New ComboBoxItem($"Год {y}", CStr(y)))
@@ -81,5 +92,16 @@ Public Class IndexPage
         ' Запоминаем
         ViewState("counter") = counter
     End Sub
+
+    Private Sub uploadAvatar_FileReceived(sender As Object, e As FileUploadEventArgs) Handles uploadAvatar.FileReceived
+        Using stream = e.File.OpenReadStream()
+            Dim filePath = Path.Combine("uploads", e.File.FileName)
+
+            Using fs = File.Create(filePath)
+                stream.CopyTo(fs)
+            End Using
+        End Using
+    End Sub
+
 
 End Class

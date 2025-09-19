@@ -1,6 +1,7 @@
 ﻿Option Strict On
 
 Imports System.Runtime.CompilerServices
+Imports System.Threading
 Imports System.Web
 Imports WebPages.Controls
 
@@ -121,15 +122,13 @@ Public Module WebPagesHelper
     ' Создать пользовательские событие
     <Extension>
     Public Sub GenerateControlEvent(ThisPage As Page)
-        Dim ctlEvent As IHtmlControl = Nothing
-
         Dim eventControl = ThisPage.Form(HtmlControl.FieldNameEventControl)
         Dim eventName = ThisPage.Form(HtmlControl.FieldNameEventName)
         Dim eventArgument = ThisPage.Form(HtmlControl.FieldNameEventArgument)
 
         ' Ищем элемент управления. Если ЭУ не задан, значит это пустой Postback
         If Not String.IsNullOrEmpty(eventControl) Then
-            ctlEvent = FindControl(ThisPage, eventControl)
+            Dim ctlEvent = FindControl(ThisPage, eventControl)
 
             ' Если было событие от элемента управления и такой элемент управления существует
             If ctlEvent IsNot Nothing Then
@@ -137,6 +136,28 @@ Public Module WebPagesHelper
             Else
                 Throw New Exception($"Элемент управления ""{eventControl}"" создал событие, но он не зарегистрирован в веб-форме")
             End If
+        End If
+    End Sub
+
+
+    ' Создать событие загрузки файлов, если форма пришла с файлами
+    <Extension>
+    Public Sub GenerateFormFilesEvent(ThisPage As Page, tokenCancel As CancellationToken)
+        If ThisPage.Form.Files?.Count > 0 Then
+
+            ' Группируем файлы по имени (name атрибут input)
+            Dim filesByName = ThisPage.Form.Files.GroupBy(Function(f) f.Name, StringComparer.OrdinalIgnoreCase)
+
+            For Each grp In filesByName
+                Dim eventControl = grp.Key
+                Dim ctlFile = FindControl(ThisPage, eventControl)
+
+                If ctlFile IsNot Nothing Then
+                    ctlFile.ProcessFile(grp, tokenCancel)
+                Else
+                    Throw New Exception($"Элемент управления ""{eventControl}"" создал событие загрузки файла, но он не зарегистрирован в веб-форме")
+                End If
+            Next
         End If
     End Sub
 
@@ -163,7 +184,7 @@ Public Module WebPagesHelper
     ' Для создания заменителей тега формы
     <Extension>
     Public Sub GenerateBeginEndViewData(ThisPage As Page)
-        ThisPage.ViewData("__formBegin") = $"<form name=""{HttpUtility.HtmlAttributeEncode(ThisPage.Id)}"" action=""{ThisPage.Context.Request.Path}"" method=""post"">
+        ThisPage.ViewData("__formBegin") = $"<form name=""{HttpUtility.HtmlAttributeEncode(ThisPage.Id)}"" enctype=""{HtmlControl.FormEncType}"" action=""{ThisPage.Context.Request.Path}"" method=""post"">
     <input type=""hidden"" name=""{HtmlControl.FieldNameEventControl}"" value="""" />
     <input type=""hidden"" name=""{HtmlControl.FieldNameEventName}"" value="""" />
     <input type=""hidden"" name=""{HtmlControl.FieldNameEventArgument}"" value="""" />

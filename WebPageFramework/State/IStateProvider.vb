@@ -12,7 +12,7 @@ Public Interface IStateProvider
     ''' Метод должен сохранить объект состояния в постоянное хранилище. Для идентификации состояния также передаётся уникальный ключ, который генерирует потребитель
     ''' </summary>
     ''' <param name="TreeState">Объект состояния</param>
-    ''' <param name="Key">Уникальный ключ состояния</param>
+    ''' <param name="Page">Страница</param>
     Sub ToStorage(TreeState As String, Page As IPage)
 
 End Interface

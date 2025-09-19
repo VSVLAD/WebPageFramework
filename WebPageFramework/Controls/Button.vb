@@ -13,14 +13,11 @@ Namespace Controls
 
         Public Sub New(Parent As IContainer, Id As String)
             MyBase.New(Parent, Id)
-
-            ' Значения по-умолчанию
-            Me.Text = String.Empty
         End Sub
 
         Public Event Click As HtmlControlEventHandler
 
-        Public Property Text As String
+        Public Property Text As String = String.Empty
 
         Public Overrides Function RenderHtml() As String
             If Not Visible Then Return String.Empty

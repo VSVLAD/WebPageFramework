@@ -77,6 +77,9 @@ Public MustInherit Class Page
             ' После пользовательские события контролов
             Me.GenerateControlEvent()
 
+            ' Создаём события на загрузку файлов
+            Me.GenerateFormFilesEvent(tokenCancel)
+
         Else
             ' Если не было PostBack, но состояние было успешно прочитано
             If pageStateAvailable Then
@@ -89,7 +92,6 @@ Public MustInherit Class Page
         ' Сохраняем состояние
         Me.PageSaveState(Me.GetWebPagesOptions().StateProvider, Me.GetWebPagesOptions().StateFormatter)
 
-        Await Task.CompletedTask
     End Function
 
     Public Overridable Async Function RenderAsync(tokenCancel As CancellationToken) As Task(Of String) Implements IPage.RenderAsync

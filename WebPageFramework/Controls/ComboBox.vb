@@ -11,22 +11,20 @@ Namespace Controls
 
         Public Sub New(Parent As IContainer, Id As String)
             MyBase.New(Parent, Id)
-
-            ' Значения по-умолчанию
-            Me.SelectedItem = Nothing
-            Me.SelectedText = String.Empty
-            Me.SelectedValue = String.Empty
-            Me.Multiple = False
-            Me.Items = New List(Of ComboBoxItem)
         End Sub
 
         Public Event SelectedItemChanged As HtmlControlEventHandler
 
-        Public Property SelectedText As String
-        Public Property SelectedValue As String
-        Public Property SelectedItem As ComboBoxItem
-        Public Property Items As List(Of ComboBoxItem)
-        Public Property Multiple As Boolean
+        Public Property SelectedText As String = String.Empty
+
+        Public Property SelectedValue As String = String.Empty
+
+        Public Property SelectedItem As ComboBoxItem = Nothing
+
+        Public Property Items As List(Of ComboBoxItem) = New List(Of ComboBoxItem)
+
+        Public Property Multiple As Boolean = False
+
 
         Public Overrides Function RenderHtml() As String
             If Not Visible Then Return String.Empty

@@ -13,20 +13,16 @@ Namespace Controls
 
         Public Sub New(Parent As IContainer, Id As String)
             MyBase.New(Parent, Id)
-
-            ' Значения по-умолчанию
-            Me.HRef = String.Empty
-            Me.Text = String.Empty
         End Sub
 
         Public Event Click As HtmlControlEventHandler
 
-        Public Property HRef As String
+        Public Property HRef As String = String.Empty
 
         ''' <summary>
         ''' Свойство поддерживает HTML-разметку
         ''' </summary>
-        Public Property Text As String
+        Public Property Text As String = String.Empty
 
         Public Overrides Function RenderHtml() As String
             If Not Visible Then Return String.Empty

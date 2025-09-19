@@ -1,4 +1,7 @@
-﻿Namespace Controls
+﻿Imports System.Threading
+Imports Microsoft.AspNetCore.Http
+
+Namespace Controls
 
     Public Interface IHtmlControl
         Inherits IControl, IStateObject
@@ -53,6 +56,11 @@
         ''' Метод вызывается фреймворком и передаётся значение формы, чтобы элемент управления мог себя инициализировать этим значением. Должен вернуть успех, если выполнено
         ''' </summary>
         Sub ProcessFormData(Value As String)
+
+        ''' <summary>
+        ''' Метод вызывается фреймворком и передаётся объект файла из формы, если происходит загрузка файла
+        ''' </summary>
+        Sub ProcessFile(Files As IEnumerable(Of IFormFile), cancellationToken As CancellationToken)
 
     End Interface
 

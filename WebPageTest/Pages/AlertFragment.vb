@@ -6,8 +6,8 @@ Imports WebPages.Controls
 Public Class AlertFragment
     Inherits Fragment
 
-    Private WithEvents litTime As New Literal(Me, "litTime")
-    Private WithEvents btnHideMe As New Button(Me, "btnHideMe")
+    Private WithEvents litTime As New Literal(Me, NameOf(litTime))
+    Private WithEvents btnHideMe As New Button(Me, NameOf(btnHideMe))
 
     Public Sub New(Parent As IContainer, Id As String)
         MyBase.New(Parent, Id)

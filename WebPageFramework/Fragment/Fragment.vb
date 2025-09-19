@@ -1,5 +1,7 @@
 ﻿Option Strict On
 
+Imports System.Threading
+Imports Microsoft.AspNetCore.Http
 Imports WebPages.Controls
 
 ''' <summary>
@@ -95,9 +97,15 @@ Public MustInherit Class Fragment
     End Function
 
     Public Sub ProcessControlEvent(EventName As String, EventArgument As String) Implements IHtmlControl.ProcessControlEvent
+
     End Sub
 
     Public Sub ProcessFormData(Value As String) Implements IHtmlControl.ProcessFormData
+
+    End Sub
+
+    Public Sub ProcessFile(Files As IEnumerable(Of IFormFile), cancellationToken As CancellationToken) Implements IHtmlControl.ProcessFile
+
     End Sub
 
     Public Sub FromState(State As ViewObject) Implements IStateObject.FromState

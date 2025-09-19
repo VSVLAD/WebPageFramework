@@ -13,18 +13,15 @@ Namespace Controls
 
         Public Sub New(Parent As IContainer, Id As String)
             MyBase.New(Parent, Id)
-
-            ' Значения по-умолчанию
-            Me.Text = String.Empty
-            Me.MultiLine = False
-            Me.Rows = 0
         End Sub
 
         Public Event TextChanged As HtmlControlEventHandler
 
-        Public Property Text As String
-        Public Property MultiLine As Boolean
-        Public Property Rows As Integer
+        Public Property Text As String = String.Empty
+
+        Public Property MultiLine As Boolean = False
+
+        Public Property Rows As Integer = 0
 
         Public Overrides Function RenderHtml() As String
             If Not Visible Then Return String.Empty
