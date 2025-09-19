@@ -16,15 +16,10 @@
     <PackageTags>WebForms;WebPages;ViewState;PostBack</PackageTags>
     <Product>WebPages</Product>
     <Company>VS Project ©</Company>
-    <Version>1.0.0.1</Version>
+    <Version>1.0.0.2</Version>
     <Authors>Vladilen</Authors>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Content Include="WebPagesMiddlewareExtensions.vb" />
-    <Content Include="WebPagesMiddleware.vb" />
-  </ItemGroup>
 
   <ItemGroup>
     <None Include="..\README.md">
