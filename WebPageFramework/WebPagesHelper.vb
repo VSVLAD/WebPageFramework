@@ -139,16 +139,15 @@ Public Module WebPagesHelper
         End If
     End Sub
 
-
     ' Создать событие загрузки файлов, если форма пришла с файлами
     <Extension>
-    Public Sub GenerateFormFilesEvent(ThisPage As Page, tokenCancel As CancellationToken)
+    Public Sub GenerateFileReceivedEvent(ThisPage As Page, tokenCancel As CancellationToken)
         If ThisPage.Form.Files?.Count > 0 Then
 
             ' Группируем файлы по имени (name атрибут input)
-            Dim filesByName = ThisPage.Form.Files.GroupBy(Function(f) f.Name, StringComparer.OrdinalIgnoreCase)
+            Dim filesByInputName = ThisPage.Form.Files.GroupBy(Function(f) f.Name, StringComparer.OrdinalIgnoreCase)
 
-            For Each grp In filesByName
+            For Each grp In filesByInputName
                 Dim eventControl = grp.Key
                 Dim ctlFile = FindControl(ThisPage, eventControl)
 

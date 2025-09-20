@@ -1,6 +1,7 @@
 ﻿Option Strict On
 
 Imports System.Text
+Imports System.Threading
 Imports System.Web
 Imports Microsoft.AspNetCore.Http
 
@@ -51,9 +52,9 @@ Namespace Controls
             Return strBuffer.ToString()
         End Function
 
-        Public Overrides Sub ProcessFile(Files As IEnumerable(Of IFormFile), cancellationToken As Threading.CancellationToken)
+        Public Overrides Sub ProcessFile(Files As IEnumerable(Of IFormFile), TokenCancel As CancellationToken)
             For Each file In Files
-                RaiseEvent FileReceived(Me, New FileUploadEventArgs(file))
+                RaiseEvent FileReceived(Me, New FileUploadEventArgs(file, TokenCancel))
             Next
         End Sub
 
@@ -87,8 +88,11 @@ Namespace Controls
 
         Public Property File As IFormFile
 
-        Public Sub New(File As IFormFile)
+        Public Property TokenCancel As CancellationToken
+
+        Public Sub New(File As IFormFile, TokenCancel As CancellationToken)
             Me.File = File
+            Me.TokenCancel = TokenCancel
         End Sub
 
     End Class

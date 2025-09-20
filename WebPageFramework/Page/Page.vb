@@ -78,7 +78,7 @@ Public MustInherit Class Page
             Me.GenerateControlEvent()
 
             ' Создаём события на загрузку файлов
-            Me.GenerateFormFilesEvent(tokenCancel)
+            Me.GenerateFileReceivedEvent(tokenCancel)
 
         Else
             ' Если не было PostBack, но состояние было успешно прочитано

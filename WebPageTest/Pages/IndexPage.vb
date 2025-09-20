@@ -93,12 +93,21 @@ Public Class IndexPage
         ViewState("counter") = counter
     End Sub
 
-    Private Sub uploadAvatar_FileReceived(sender As Object, e As FileUploadEventArgs) Handles uploadAvatar.FileReceived
+    Private Async Sub uploadAvatar_FileReceived(sender As Object, e As FileUploadEventArgs) Handles uploadAvatar.FileReceived
+
+        If e.File.Length = 0 Then
+            Return
+        End If
+
+        If e.File.Length > 50L * 1024L * 1024L Then
+            Return
+        End If
+
         Using stream = e.File.OpenReadStream()
             Dim filePath = Path.Combine("uploads", e.File.FileName)
 
-            Using fs = File.Create(filePath)
-                stream.CopyTo(fs)
+            Using fs = File.Create(filePath, 10)
+                Await stream.CopyToAsync(fs, 81920, e.TokenCancel)
             End Using
         End Using
     End Sub
