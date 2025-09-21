@@ -2,25 +2,25 @@
 
 Imports System.Runtime.CompilerServices
 
-Public Module ColorsExtensions
+Public Module BSColorsExtensions
 
     ''' <summary>
     ''' Преобразует перечисление цвета в текстовое представление
     ''' </summary>
     <Extension>
-    Public Function Value(ThisValue As Colors) As String
+    Public Function Value(ThisValue As BSColors) As String
         Select Case ThisValue
-            Case Colors.Primary
+            Case BSColors.Primary
                 Return "primary"
-            Case Colors.Secondary
+            Case BSColors.Secondary
                 Return "secondary"
-            Case Colors.Success
+            Case BSColors.Success
                 Return "success"
-            Case Colors.Warning
+            Case BSColors.Warning
                 Return "warning"
-            Case Colors.Danger
+            Case BSColors.Danger
                 Return "danger"
-            Case Colors.Info
+            Case BSColors.Info
                 Return "info"
             Case Else
                 Return String.Empty
