@@ -1,5 +1,5 @@
 ﻿
-Public Enum Colors
+Public Enum BSColors
     Primary
     Secondary
     Danger

@@ -2,13 +2,14 @@
 
 Imports System.IO
 Imports WebPages
+Imports WebPages.Bootstrap5.Controls
 Imports WebPages.Controls
 
 Public Class IndexPage
     Inherits Page
 
     ' Создаём контролы
-    Private WithEvents formBtnBs1 As New Button(Me, NameOf(formBtnBs1))
+    Private WithEvents formBtnBs1 As New BSButton(Me, NameOf(formBtnBs1))
     Private WithEvents formBtn2 As New Button(Me, NameOf(formBtn2))
     Private WithEvents formTxt1 As New TextBox(Me, NameOf(formTxt1))
     Private WithEvents formCmb1 As New ComboBox(Me, NameOf(formCmb1))
@@ -23,7 +24,7 @@ Public Class IndexPage
         If FirstRun Then
             formTxt1.CSS = "form-control"
             formBtnBs1.Text = "Нажми меня!"
-            formBtnBs1.CSS = "btn btn-danger"
+            formBtnBs1.Color = BSColors.Danger
 
             formBtn2.CSS = "btn btn-success"
             formBtn2.Text = "Счётчик"
