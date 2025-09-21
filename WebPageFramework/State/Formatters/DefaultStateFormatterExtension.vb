@@ -114,7 +114,9 @@ Public Module DefaultStateFormatterExtension
         End If
 
         ' 2) Поиск в уже загруженных сборках
-        For Each asm In AppDomain.CurrentDomain.GetAssemblies().Where(Function(a) a.FullName.Contains("WebPages"))
+        Dim WebPagesNamespaceName = GetType(IStateFormatter).Namespace
+
+        For Each asm In AppDomain.CurrentDomain.GetAssemblies().Where(Function(a) a.FullName.Contains(WebPagesNamespaceName))
             Try
                 ' Попробуем и полный и простой вариант
                 t = asm.GetType(typeName, False, True)
