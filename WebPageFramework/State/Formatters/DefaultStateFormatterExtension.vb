@@ -114,55 +114,6 @@ Public Module DefaultStateFormatterExtension
         End If
 
         ' 2) Поиск в уже загруженных сборках
-        For Each asm In AppDomain.CurrentDomain.GetAssemblies().Where(Function(a) a.FullName.Contains("WebPages"))
-            Try
-                ' Попробуем и полный и простой вариант
-                t = asm.GetType(typeName, False, True)
-                If t IsNot Nothing Then Return t
-                t = asm.GetType(simpleName, False, True)
-                If t IsNot Nothing Then Return t
-            Catch
-                ' игнорируем сборки, к которым нет доступа
-            End Try
-        Next
-
-        ' 3) Если есть имя сборки в строке, попытаться загрузить её (Assembly.Load)
-        If Not String.IsNullOrEmpty(assemblyNamePart) Then
-            Try
-                Dim asm = Assembly.Load(assemblyNamePart)
-                If asm IsNot Nothing Then
-                    t = asm.GetType(simpleName, False, True)
-                    If t IsNot Nothing Then Return t
-                End If
-            Catch
-                ' Assembly.Load может бросать — игнорируем и возвращаем Nothing ниже
-            End Try
-        End If
-
-        Return Nothing
-    End Function
-
-    ' Попытаться разрешить тип по имени, проверяя:
-    ' 1) Type.GetType (может загрузить сборку по имени, если возможно)
-    ' 2) по полному/простому имени в уже загруженных сборках
-    ' 3) если в typeName есть имя сборки — попытаться Assembly.Load и извлечь тип
-    Public Function ResolveType(typeName As String) As Type
-        If String.IsNullOrWhiteSpace(typeName) Then Return Nothing
-
-        ' 1) Type.GetType (попробуем сразу)
-        Dim t As Type = Type.GetType(typeName, False, True)
-        If t IsNot Nothing Then Return t
-
-        ' Упростим имя типа (без указания сборки)
-        Dim simpleName As String = typeName
-        Dim assemblyNamePart As String = Nothing
-        Dim commaIndex As Integer = typeName.IndexOf(","c)
-        If commaIndex >= 0 Then
-            simpleName = typeName.Substring(0, commaIndex).Trim()
-            assemblyNamePart = typeName.Substring(commaIndex + 1).Trim()
-        End If
-
-        ' 2) Поиск в уже загруженных сборках
         Dim WebPagesNamespaceName = GetType(IStateFormatter).Namespace
 
         For Each asm In AppDomain.CurrentDomain.GetAssemblies().Where(Function(a) a.FullName.Contains(WebPagesNamespaceName))
